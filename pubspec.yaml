@@ -1,21 +1,31 @@
-name: flutter_project_template
+name: social_reporter
 description: A new Flutter project.
+version: 1.0.0+1
 
 publish_to: 'none'
 
-version: 0.0.1+1
-
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.0
+  flutter_web_plugins:
+    sdk: flutter
+
+  # UI
+  cupertino_icons: ^1.0.2
+
+  # APIs
+  tdlib: # 1.6.0
+    git:
+      url: https://github.com/OlehMarchenko95/tdlib.git
+      ref: ad7d8f4b4bfeb09658afab321b55a6c664ef15a7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^1.0.0
 
 flutter:
   uses-material-design: true
