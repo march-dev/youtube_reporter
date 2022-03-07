@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'src/apis.dart';
 import 'package:tdlib/tdlib.dart';
 
+import 'src/apis.dart';
 import 'src/app.dart';
 
 Future<void> main() async {
