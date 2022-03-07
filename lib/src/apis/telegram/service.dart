@@ -1,258 +1,189 @@
-// import 'dart:async';
-// import 'dart:io';
-// import 'dart:isolate';
-// import 'dart:math' show Random;
+import 'dart:async';
 
-// import 'package:flutter/foundation.dart';
+import 'package:tdlib/td_api.dart';
 
-// import 'package:tdlib/tdlib.dart';
-// import 'package:tdlib/td_api.dart';
+import 'client.dart';
 
-// int _random() => Random().nextInt(10000000);
+typedef ErrorCallback = void Function(TdError error);
+typedef ResultCallback = Future<TdObject<dynamic>?> Function();
 
-// class TelegramService extends ChangeNotifier {
-//   late int _client;
-//   late StreamController<TdObject> _eventController;
-//   late StreamSubscription<TdObject> _eventReceiver;
-//   Map results = <int, Completer>{};
-//   Map callbackResults = <int, Future<void>>{};
-//   late Directory appDocDir;
-//   late Directory appExtDir;
-//   String lastRouteName;
+enum TdAuthStatus {
+  waitingPhoneOrClosed,
+  waitingOtp,
+  ready,
+  error,
+}
 
-//   final ReceivePort _receivePort = ReceivePort();
-//   late Isolate _isolate;
+class TelegramService {
+  factory TelegramService() => _instance;
+  TelegramService._();
+  static final _instance = TelegramService._();
 
-//   TelegramService({this.lastRouteName = initRoute}) {
-//     _eventController = StreamController();
-//     _eventController.stream.listen(_onEvent);
-//     initClient();
-//   }
+  late TelegramClient _client;
+  late String _appDocDir;
+  late String _appExtDir;
 
-//   /// Creates a new instance of TDLib.
-//   /// Returns Pointer to the created instance of TDLib.
-//   /// Pointer 0 mean No client instance.
-//   void initClient() async {
-//     _client = tdCreate();
+  late StreamController<TdAuthStatus> _statusController;
+  late StreamSubscription<TdObject> _eventSub;
 
-//     // ignore: unused_local_variable
-//     bool storagePermission = await Permission.storage
-//         .request()
-//         .isGranted; // todo : handel storage permission
-//     /*try {
-//       PermissionStatus storagePermission =
-//           await SimplePermissions.requestPermission(
-//               Permission.WriteExternalStorage);
-//     } on PlatformException catch (e) {
-//       print(e);
-//     }
-//     */
-//     appDocDir = await getApplicationDocumentsDirectory();
-//     appExtDir = await getTemporaryDirectory();
+  bool _initialized = false;
 
-//     //execute(SetLogStream(logStream: LogStreamEmpty()));
-//     execute(const SetLogVerbosityLevel(newVerbosityLevel: 1));
-//     tdSend(_client, const GetCurrentState());
-//     _isolate = await Isolate.spawn(_receive, _receivePort.sendPort,
-//         debugName: "isolated receive");
-//     _receivePort.listen(_receiver);
-//   }
+  void init(TelegramClient client) {
+    if (_initialized) {
+      dispose();
+    }
 
-//   static _receive(sendPortToMain) async {
-//     TdNativePlugin.registerWith();
-//     await TdPlugin.initialize();
-//     //var x = _rawClient.td_json_client_create();
-//     while (true) {
-//       final s = TdPlugin.instance.tdReceive();
-//       if (s != null) {
-//         sendPortToMain.send(s);
-//       }
-//     }
-//   }
+    _initialized = true;
 
-//   void _receiver(dynamic newEvent) async {
-//     final event = convertToObject(newEvent);
-//     if (event == null) {
-//       return;
-//     }
-//     if (event is Updates) {
-//       for (var event in event.updates) {
-//         _eventController.add(event);
-//       }
-//     } else {
-//       _eventController.add(event);
-//     }
-//     await _resolveEvent(event);
-//   }
+    _client = client;
 
-//   Future _resolveEvent(event) async {
-//     if (event.extra == null) {
-//       return;
-//     }
-//     final int extraId = event.extra;
-//     if (results.containsKey(extraId)) {
-//       results.remove(extraId).complete(event);
-//     } else if (callbackResults.containsKey(extraId)) {
-//       await callbackResults.remove(extraId);
-//     }
-//   }
+    _appDocDir = '';
+    _appExtDir = '';
 
-//   void stop() {
-//     _eventController.close();
-//     _eventReceiver.cancel();
-//     _receivePort.close();
-//     _isolate.kill(priority: Isolate.immediate);
-//   }
+    _eventSub = _client.events.listen(_onEvent);
+  }
 
-//   void _onEvent(TdObject event) async {
-//     /*try {
-//       print('res =>>>> ${event.toJson()}');
-//     } catch (NoSuchMethodError) {
-//       print('res =>>>> ${event.getConstructor()}');
-//     }*/
-//     switch (event.getConstructor()) {
-//       case UpdateAuthorizationState.CONSTRUCTOR:
-//         await _authorizationController(
-//           (event as UpdateAuthorizationState).authorizationState,
-//           isOffline: true,
-//         );
-//         break;
-//       default:
-//         return;
-//     }
-//   }
+  void dispose() {
+    _statusController.close();
+    _eventSub.cancel();
+  }
 
-//   Future _authorizationController(
-//     AuthorizationState authState, {
-//     bool isOffline = false,
-//   }) async {
-//     String route;
-//     switch (authState.getConstructor()) {
-//       case AuthorizationStateWaitTdlibParameters.CONSTRUCTOR:
-//         await send(
-//           SetTdlibParameters(
-//             parameters: TdlibParameters(
-//               useTestDc: false,
-//               useSecretChats: false,
-//               useMessageDatabase: true,
-//               useFileDatabase: true,
-//               useChatInfoDatabase: true,
-//               ignoreFileNames: true,
-//               enableStorageOptimizer: true,
-//               systemLanguageCode: 'EN',
-//               filesDirectory: appExtDir.path + '/tdlib',
-//               databaseDirectory: appDocDir.path,
-//               applicationVersion: '0.0.1',
-//               deviceModel: 'Unknown',
-//               systemVersion: 'Unknonw',
-//               apiId: 1311145,
-//               apiHash: '634c7b54b8b710ad6a36428b095e2b60',
-//             ),
-//           ),
-//         );
-//         return;
-//       case AuthorizationStateWaitEncryptionKey.CONSTRUCTOR:
-//         if ((authState as AuthorizationStateWaitEncryptionKey).isEncrypted) {
-//           await send(
-//             const CheckDatabaseEncryptionKey(
-//               encryptionKey: 'mostrandomencryption',
-//             ),
-//           );
-//         } else {
-//           await send(
-//             const SetDatabaseEncryptionKey(
-//               newEncryptionKey: 'mostrandomencryption',
-//             ),
-//           );
-//         }
-//         return;
-//       case AuthorizationStateWaitPhoneNumber.CONSTRUCTOR:
-//       case AuthorizationStateClosed.CONSTRUCTOR:
-//         route = loginRoute;
-//         break;
-//       case AuthorizationStateReady.CONSTRUCTOR:
-//         route = homeRoute;
-//         break;
-//       case AuthorizationStateWaitCode.CONSTRUCTOR:
-//         route = otpRoute;
-//         break;
-//       case AuthorizationStateWaitOtherDeviceConfirmation.CONSTRUCTOR:
-//       case AuthorizationStateWaitRegistration.CONSTRUCTOR:
-//       case AuthorizationStateWaitPassword.CONSTRUCTOR:
-//       case AuthorizationStateLoggingOut.CONSTRUCTOR:
-//       case AuthorizationStateClosing.CONSTRUCTOR:
-//         return;
-//       default:
-//         return;
-//     }
+  // !
+  // ! Event section
+  // !
+  Future<void> _onEvent(TdObject event) async {
+    try {
+      print('_onEvent =>>>> ${event.toJson()}');
+    } catch (e) {
+      print('_onEvent =>>>> ${event.getConstructor()}');
+    }
 
-//     if (route == lastRouteName) return;
-//     lastRouteName = route;
-//     locator<NavigationService>().navigateTo(route);
-//   }
+    switch (event.getConstructor()) {
+      case UpdateAuthorizationState.CONSTRUCTOR:
+        await _handleAuth(
+          (event as UpdateAuthorizationState).authorizationState,
+          isOffline: true,
+        );
+        break;
 
-//   void destroyClient() async {
-//     tdSend(_client, const Close());
-//   }
+      default:
+        return;
+    }
+  }
 
-//   /// Sends request to the TDLib client. May be called from any thread.
-//   Future<TdObject?> send(event, {Future<void>? callback}) async {
-//     // ignore: missing_return
-//     final rndId = _random();
-//     if (callback != null) {
-//       callbackResults[rndId] = callback;
-//       try {
-//         tdSend(_client, event, rndId);
-//       } catch (e) {
-//         if (kDebugMode) {
-//           print(e);
-//         }
-//       }
-//     } else {
-//       final completer = Completer<TdObject>();
-//       results[rndId] = completer;
-//       tdSend(_client, event, rndId);
-//       return completer.future;
-//     }
-//   }
+  Future<void> _handleAuth(
+    AuthorizationState authState, {
+    bool isOffline = false,
+  }) async {
+    switch (authState.getConstructor()) {
+      case AuthorizationStateWaitTdlibParameters.CONSTRUCTOR:
+        await _client.send(
+          SetTdlibParameters(
+            parameters: TdlibParameters(
+              useTestDc: false,
+              useSecretChats: false,
+              useMessageDatabase: true,
+              useFileDatabase: true,
+              useChatInfoDatabase: true,
+              ignoreFileNames: true,
+              enableStorageOptimizer: true,
+              systemLanguageCode: 'EN',
+              filesDirectory: _appExtDir,
+              databaseDirectory: _appDocDir,
+              applicationVersion: '0.0.1',
+              deviceModel: 'Unknown',
+              systemVersion: 'Unknonw',
+              apiId: 1311145,
+              apiHash: '634c7b54b8b710ad6a36428b095e2b60',
+            ),
+          ),
+        );
+        return;
+      case AuthorizationStateWaitEncryptionKey.CONSTRUCTOR:
+        if ((authState as AuthorizationStateWaitEncryptionKey).isEncrypted) {
+          await _client.send(
+            const CheckDatabaseEncryptionKey(
+              encryptionKey: 'mostrandomencryption',
+            ),
+          );
+        } else {
+          await _client.send(
+            const SetDatabaseEncryptionKey(
+              newEncryptionKey: 'mostrandomencryption',
+            ),
+          );
+        }
+        return;
+      case AuthorizationStateClosed.CONSTRUCTOR:
+      case AuthorizationStateWaitPhoneNumber.CONSTRUCTOR:
+        _statusController.add(TdAuthStatus.waitingPhoneOrClosed);
+        break;
+      case AuthorizationStateWaitCode.CONSTRUCTOR:
+        _statusController.add(TdAuthStatus.waitingOtp);
+        break;
+      case AuthorizationStateReady.CONSTRUCTOR:
+        _statusController.add(TdAuthStatus.ready);
+        break;
+      case AuthorizationStateWaitOtherDeviceConfirmation.CONSTRUCTOR:
+      case AuthorizationStateWaitRegistration.CONSTRUCTOR:
+      case AuthorizationStateWaitPassword.CONSTRUCTOR:
+      case AuthorizationStateLoggingOut.CONSTRUCTOR:
+      case AuthorizationStateClosing.CONSTRUCTOR:
+        return;
+      default:
+        return;
+    }
+  }
 
-//   /// Synchronously executes TDLib request. May be called from any thread.
-//   /// Only a few requests can be executed synchronously.
-//   /// Returned pointer will be deallocated by TDLib during next call to clientReceive or clientExecute in the same thread, so it can't be used after that.
-//   TdObject execute(TdFunction event) => tdExecute(event)!;
+  // !
+  // ! Method section
+  // !
+  Future<TdAuthStatus> _methodWrapper(
+    ResultCallback action,
+    ErrorCallback onError,
+  ) async {
+    final result = await action();
 
-//   Future setAuthenticationPhoneNumber(
-//     String phoneNumber, {
-//     required void Function(TdError) onError,
-//   }) async {
-//     final result = await send(
-//       SetAuthenticationPhoneNumber(
-//         phoneNumber: phoneNumber,
-//         settings: const PhoneNumberAuthenticationSettings(
-//           allowFlashCall: false,
-//           isCurrentPhoneNumber: false,
-//           allowSmsRetrieverApi: false,
-//           allowMissedCall: true,
-//           authenticationTokens: [],
-//         ),
-//       ),
-//     );
-//     if (result != null && result is TdError) {
-//       onError(result);
-//     }
-//   }
+    if (result != null && result is TdError) {
+      onError(result);
+      _statusController.add(TdAuthStatus.error);
+    }
 
-//   Future checkAuthenticationCode(
-//     String code, {
-//     required void Function(TdError) onError,
-//   }) async {
-//     final result = await send(
-//       CheckAuthenticationCode(
-//         code: code,
-//       ),
-//     );
-//     if (result != null && result is TdError) {
-//       onError(result);
-//     }
-//   }
-// }
+    return _statusController.stream.first;
+  }
+
+  Future<TdAuthStatus> login(
+    String phoneNumber, {
+    required ErrorCallback onError,
+  }) {
+    return _methodWrapper(
+      () => _client.send(
+        SetAuthenticationPhoneNumber(
+          phoneNumber: phoneNumber,
+          settings: const PhoneNumberAuthenticationSettings(
+            allowFlashCall: false,
+            isCurrentPhoneNumber: false,
+            allowSmsRetrieverApi: false,
+            allowMissedCall: true,
+            authenticationTokens: [],
+          ),
+        ),
+      ),
+      onError,
+    );
+  }
+
+  Future<TdAuthStatus> checkOtp(
+    String code, {
+    required ErrorCallback onError,
+  }) {
+    return _methodWrapper(
+      () => _client.send(
+        CheckAuthenticationCode(
+          code: code,
+        ),
+      ),
+      onError,
+    );
+  }
+}

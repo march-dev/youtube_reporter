@@ -165,8 +165,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: ad7d8f4b4bfeb09658afab321b55a6c664ef15a7
-      resolved-ref: ad7d8f4b4bfeb09658afab321b55a6c664ef15a7
+      ref: bf2247d1e2ea0c7f7c5e6f324bced6cefdca3a88
+      resolved-ref: bf2247d1e2ea0c7f7c5e6f324bced6cefdca3a88
       url: "https://github.com/OlehMarchenko95/tdlib.git"
     source: git
     version: "1.6.0"

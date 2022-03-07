@@ -7,19 +7,31 @@
     {
       "name": "Debug",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "args": [
+        "-d",
+        "chrome"
+      ]
     },
     {
       "name": "Profile",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "flutterMode": "profile",
+      "args": [
+        "-d",
+        "chrome"
+      ]
     },
     {
       "name": "Release",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release"
+      "flutterMode": "release",
+      "args": [
+        "-d",
+        "chrome"
+      ]
     }
   ]
 }
