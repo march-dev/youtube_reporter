@@ -62,7 +62,7 @@ class TelegramClient {
 
   static Future<void> _isolateLoop(SendPort sendPortToMain) async {
     TdNativePlugin.registerWith();
-    await TdPlugin.initialize();
+    await TdPlugin.initialize('libtdjson.1.8.1.dylib');
 
     while (true) {
       final s = TdPlugin.instance.tdReceive();

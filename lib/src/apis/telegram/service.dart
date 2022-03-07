@@ -8,7 +8,6 @@ typedef ErrorCallback = void Function(TdError error);
 typedef ResultCallback = Future<TdObject<dynamic>?> Function();
 
 enum TdAuthStatus {
-  waitingPhoneOrClosed,
   waitingOtp,
   ready,
   error,
@@ -23,7 +22,7 @@ class TelegramService {
   late String _appDocDir;
   late String _appExtDir;
 
-  late StreamController<TdAuthStatus> _statusController;
+  var _statusCompleter = Completer<TdAuthStatus>();
   late StreamSubscription<TdObject> _eventSub;
 
   bool _initialized = false;
@@ -41,10 +40,11 @@ class TelegramService {
     _appExtDir = '';
 
     _eventSub = _client.events.listen(_onEvent);
+
+    _setTdlibParameters();
   }
 
   void dispose() {
-    _statusController.close();
     _eventSub.cancel();
   }
 
@@ -52,12 +52,6 @@ class TelegramService {
   // ! Event section
   // !
   Future<void> _onEvent(TdObject event) async {
-    try {
-      print('_onEvent =>>>> ${event.toJson()}');
-    } catch (e) {
-      print('_onEvent =>>>> ${event.getConstructor()}');
-    }
-
     switch (event.getConstructor()) {
       case UpdateAuthorizationState.CONSTRUCTOR:
         await _handleAuth(
@@ -77,27 +71,7 @@ class TelegramService {
   }) async {
     switch (authState.getConstructor()) {
       case AuthorizationStateWaitTdlibParameters.CONSTRUCTOR:
-        await _client.send(
-          SetTdlibParameters(
-            parameters: TdlibParameters(
-              useTestDc: false,
-              useSecretChats: false,
-              useMessageDatabase: true,
-              useFileDatabase: true,
-              useChatInfoDatabase: true,
-              ignoreFileNames: true,
-              enableStorageOptimizer: true,
-              systemLanguageCode: 'EN',
-              filesDirectory: _appExtDir,
-              databaseDirectory: _appDocDir,
-              applicationVersion: '0.0.1',
-              deviceModel: 'Unknown',
-              systemVersion: 'Unknonw',
-              apiId: 1311145,
-              apiHash: '634c7b54b8b710ad6a36428b095e2b60',
-            ),
-          ),
-        );
+        _setTdlibParameters();
         return;
       case AuthorizationStateWaitEncryptionKey.CONSTRUCTOR:
         if ((authState as AuthorizationStateWaitEncryptionKey).isEncrypted) {
@@ -114,19 +88,17 @@ class TelegramService {
           );
         }
         return;
-      case AuthorizationStateClosed.CONSTRUCTOR:
-      case AuthorizationStateWaitPhoneNumber.CONSTRUCTOR:
-        _statusController.add(TdAuthStatus.waitingPhoneOrClosed);
-        break;
       case AuthorizationStateWaitCode.CONSTRUCTOR:
-        _statusController.add(TdAuthStatus.waitingOtp);
+        _statusCompleter.complete(TdAuthStatus.waitingOtp);
         break;
       case AuthorizationStateReady.CONSTRUCTOR:
-        _statusController.add(TdAuthStatus.ready);
+      case AuthorizationStateWaitPassword.CONSTRUCTOR:
+        _statusCompleter.complete(TdAuthStatus.ready);
         break;
+      case AuthorizationStateClosed.CONSTRUCTOR:
+      case AuthorizationStateWaitPhoneNumber.CONSTRUCTOR:
       case AuthorizationStateWaitOtherDeviceConfirmation.CONSTRUCTOR:
       case AuthorizationStateWaitRegistration.CONSTRUCTOR:
-      case AuthorizationStateWaitPassword.CONSTRUCTOR:
       case AuthorizationStateLoggingOut.CONSTRUCTOR:
       case AuthorizationStateClosing.CONSTRUCTOR:
         return;
@@ -142,14 +114,41 @@ class TelegramService {
     ResultCallback action,
     ErrorCallback onError,
   ) async {
+    _statusCompleter = Completer();
     final result = await action();
+
+    if (result != null && result is Ok) {
+      return _statusCompleter.future;
+    }
 
     if (result != null && result is TdError) {
       onError(result);
-      _statusController.add(TdAuthStatus.error);
     }
 
-    return _statusController.stream.first;
+    return TdAuthStatus.error;
+  }
+
+  Future<void> _setTdlibParameters() async {
+    await _client.send(
+      SetTdlibParameters(
+        parameters: TdlibParameters(
+          useTestDc: true,
+          useSecretChats: false,
+          useMessageDatabase: true,
+          useFileDatabase: true,
+          useChatInfoDatabase: true,
+          ignoreFileNames: true,
+          enableStorageOptimizer: true,
+          systemLanguageCode: 'EN',
+          filesDirectory: _appExtDir,
+          databaseDirectory: _appDocDir,
+          applicationVersion: '0.0.1',
+          deviceModel: 'Unknown',
+          systemVersion: 'Unknonw',
+          
+        ),
+      ),
+    );
   }
 
   Future<TdAuthStatus> login(

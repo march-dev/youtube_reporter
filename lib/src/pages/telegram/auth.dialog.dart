@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../../apis.dart';
 import '../../l10n/locale.dart';
 
-const defaultCountryCode = '+38';
+const defaultCountryCode = ''; // TODO: uncomment for prod '+38';
 const phoneLength = 10;
-const otpLength = 6;
+const otpLength = 5;
 
 class TelegramAuthDialog extends StatefulWidget {
   const TelegramAuthDialog._({
@@ -106,9 +106,8 @@ class _PhoneStepState extends State<_PhoneStep> {
     final result = await widget.service.login(
       '$defaultCountryCode${_controller.text}',
       onError: (error) {
-        setState(() {
-          _error = '${AppLocale.generalError}\n${error.toJson()}';
-        });
+        _error = '${AppLocale.generalError}\n${error.message}';
+        if (mounted) setState(() {});
       },
     );
 
@@ -133,8 +132,8 @@ class _PhoneStepState extends State<_PhoneStep> {
         SizedBox(
           width: 250,
           child: TextField(
-            maxLength: 10,
             autofocus: true,
+            maxLength: phoneLength,
             controller: _controller,
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
@@ -183,9 +182,8 @@ class _OtpStepState extends State<_OtpStep> {
     final result = await widget.service.checkOtp(
       _controller.text,
       onError: (error) {
-        setState(() {
-          _error = '${AppLocale.generalError}\n${error.toJson()}';
-        });
+        _error = '${AppLocale.generalError}\n${error.message}';
+        if (mounted) setState(() {});
       },
     );
 
@@ -206,15 +204,21 @@ class _OtpStepState extends State<_OtpStep> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 24),
-        TextField(
-          maxLength: 6,
-          autofocus: true,
-          controller: _controller,
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            hintText: AppLocale.telegramEnterOtpHint,
-            errorText: _error,
+        const Spacer(),
+        SizedBox(
+          width: 200,
+          child: TextField(
+            autofocus: true,
+            maxLength: otpLength,
+            controller: _controller,
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              errorText: _error,
+              hintText: AppLocale.telegramEnterOtpHint,
+              counterStyle: const TextStyle(fontSize: 0),
+              counterText: '',
+            ),
           ),
         ),
         const Spacer(),
