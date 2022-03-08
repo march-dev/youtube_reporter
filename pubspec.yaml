@@ -16,7 +16,12 @@ dependencies:
   # UI
   cupertino_icons: ^1.0.2
 
+  # Auth
+  google_sign_in: ^5.2.4
+  extension_google_sign_in_as_googleapis_auth: ^2.0.4
+
   # APIs
+  googleapis: ^8.1.0
   tdlib: # 1.6.0
     git:
       url: https://github.com/OlehMarchenko95/tdlib.git

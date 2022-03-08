@@ -1,10 +1,6 @@
-// ignore_for_file: prefer_final_fields
-
 import 'package:flutter/material.dart';
+import 'package:social_reporter/core.dart';
 
-import '../apis.dart';
-import '../l10n/locale.dart';
-import '../theme/theme.dart';
 import 'telegram/auth.dialog.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,8 +14,6 @@ class _HomePageState extends State<HomePage> {
   bool _telegramLoggedIn = false;
   bool _youtubeLoggedIn = false;
   bool _twitterLoggedIn = false;
-  bool _facebookLoggedIn = false;
-  bool _instagramLoggedIn = false;
 
   Future<void> _onLoginTelegramPressed() async {
     _telegramLoggedIn =
@@ -27,7 +21,14 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  void _onInDevelopmentPressed() {
+  Future<void> _onLoginYouTubePressed() async {
+    _youtubeLoggedIn = await YouTubeService().login();
+    setState(() {});
+  }
+
+  void _onLoginTwitterPressed() {
+    YouTubeService().reportChannelVideos();
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: AppTheme.warningColor,
@@ -52,31 +53,18 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 24),
             _AdaptiveButton(
               loggedIn: _youtubeLoggedIn,
-              onPressed: _onInDevelopmentPressed,
+              onPressed: _onLoginYouTubePressed,
               title: AppLocale.homeLoginToYouTube,
               successText: AppLocale.homeLoggedInYouTube,
             ),
             const SizedBox(height: 24),
             _AdaptiveButton(
               loggedIn: _twitterLoggedIn,
-              onPressed: _onInDevelopmentPressed,
+              onPressed: _onLoginTwitterPressed,
               title: AppLocale.homeLoginToTwitter,
               successText: AppLocale.homeLoggedInTwitter,
             ),
             const SizedBox(height: 24),
-            _AdaptiveButton(
-              loggedIn: _facebookLoggedIn,
-              onPressed: _onInDevelopmentPressed,
-              title: AppLocale.homeLoginToFacebook,
-              successText: AppLocale.homeLoggedInFacebook,
-            ),
-            const SizedBox(height: 24),
-            _AdaptiveButton(
-              loggedIn: _instagramLoggedIn,
-              onPressed: _onInDevelopmentPressed,
-              title: AppLocale.homeLoginToInstagram,
-              successText: AppLocale.homeLoggedInInstagram,
-            ),
           ],
         ),
       ),

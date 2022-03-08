@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../apis.dart';
-import '../../l10n/locale.dart';
+import 'package:social_reporter/core.dart';
 
 const defaultCountryCode = ''; // TODO: uncomment for prod '+38';
 const phoneLength = 10;

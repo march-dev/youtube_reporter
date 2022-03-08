@@ -1,8 +1,7 @@
 import 'dart:async';
 
+import 'package:social_reporter/core.dart';
 import 'package:tdlib/td_api.dart';
-
-import 'client.dart';
 
 typedef ErrorCallback = void Function(TdError error);
 typedef ResultCallback = Future<TdObject<dynamic>?> Function();
@@ -145,7 +144,8 @@ class TelegramService {
           applicationVersion: '0.0.1',
           deviceModel: 'Unknown',
           systemVersion: 'Unknonw',
-          
+          apiId: AppEnv.tdApiId,
+          apiHash: AppEnv.tdApiHash,
         ),
       ),
     );
@@ -185,4 +185,11 @@ class TelegramService {
       onError,
     );
   }
+
+  // Future<void> test(
+  //   String code, {
+  //   required ErrorCallback onError,
+  // }) async {
+  //   _client.send(GetChat);
+  // }
 }
