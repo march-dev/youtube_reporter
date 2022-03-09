@@ -10,6 +10,7 @@ class AppLocale {
 
   static const generalError = 'Error occured!';
 
+  static const homeTitle = 'IT Спротив України';
   static const homeLoginToTelegram = 'Login to Telegram';
   static const homeLoggedInTelegram = 'Logged in to Telegram';
   static const homeLoginToYouTube = 'Login to YouTube';

@@ -53,34 +53,61 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const _AppBar(),
-      body: Center(
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            _AdaptiveButton(
-              loggedIn: _telegramLoggedIn,
-              onPressed: _onLoginTelegramPressed,
-              title: AppLocale.homeLoginToTelegram,
-              successTextBuilder: () => AppLocale.homeLoggedInTelegram,
+      body: Column(
+        children: [
+          const Spacer(),
+          const CircleAvatar(
+            radius: 100,
+            backgroundImage: AssetImage('assets/logo.png'),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            AppLocale.homeTitle,
+            style: TextStyle(
+              fontSize: 32,
+              color: Colors.yellow,
+              shadows: [
+                Shadow(
+                  color: Colors.blue,
+                  blurRadius: 16,
+                ),
+              ],
             ),
-            const SizedBox(height: 24),
-            _AdaptiveButton(
-              loggedIn: _youtubeLoggedIn,
-              onPressed: _onLoginYouTubePressed,
-              title: AppLocale.homeLoginToYouTube,
-              successTextBuilder: () =>
-                  AppLocale.homeLoggedInYouTube(YouTubeService().loggedInAs),
+          ),
+          const Spacer(),
+          Expanded(
+            flex: 8,
+            child: Center(
+              child: ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  _AdaptiveButton(
+                    loggedIn: _telegramLoggedIn,
+                    onPressed: _onLoginTelegramPressed,
+                    title: AppLocale.homeLoginToTelegram,
+                    successTextBuilder: () => AppLocale.homeLoggedInTelegram,
+                  ),
+                  const SizedBox(height: 24),
+                  _AdaptiveButton(
+                    loggedIn: _youtubeLoggedIn,
+                    onPressed: _onLoginYouTubePressed,
+                    title: AppLocale.homeLoginToYouTube,
+                    successTextBuilder: () => AppLocale.homeLoggedInYouTube(
+                        YouTubeService().loggedInAs),
+                  ),
+                  const SizedBox(height: 24),
+                  _AdaptiveButton(
+                    loggedIn: _twitterLoggedIn,
+                    onPressed: _onLoginTwitterPressed,
+                    title: AppLocale.homeLoginToTwitter,
+                    successTextBuilder: () => AppLocale.homeLoggedInTwitter,
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
-            const SizedBox(height: 24),
-            _AdaptiveButton(
-              loggedIn: _twitterLoggedIn,
-              onPressed: _onLoginTwitterPressed,
-              title: AppLocale.homeLoginToTwitter,
-              successTextBuilder: () => AppLocale.homeLoggedInTwitter,
-            ),
-            const SizedBox(height: 24),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
