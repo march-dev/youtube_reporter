@@ -158,12 +158,14 @@ class YouTubeService {
     }
   }
 
-  Future<void> reportVideo(String id) {
-    return _youtubeApi.videos.reportAbuse(VideoAbuseReport(
+  Future<void> reportVideo(String id) async {
+    await _youtubeApi.videos.reportAbuse(VideoAbuseReport(
       videoId: id,
       reasonId: 'V',
       secondaryReasonId: '35',
       comments: reportAbuseComment,
     ));
+
+    await Future.delayed(const Duration(seconds: 10));
   }
 }
