@@ -7,7 +7,7 @@ class AppTheme {
 
   static const primaryColor = Colors.yellow;
   static const onPrimaryColor = Colors.black;
-  static final backgroundColor = Colors.grey[900];
+  static const backgroundColor = Color(0xFF050F20);
   static const onBackgroundColor = Colors.white;
 
   static const errorColor = Colors.red;

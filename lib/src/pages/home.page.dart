@@ -65,13 +65,8 @@ class _HomePageState extends State<HomePage> {
             AppLocale.homeTitle,
             style: TextStyle(
               fontSize: 32,
+              fontWeight: FontWeight.bold,
               color: Colors.yellow,
-              shadows: [
-                Shadow(
-                  color: Colors.blue,
-                  blurRadius: 16,
-                ),
-              ],
             ),
           ),
           const Spacer(),

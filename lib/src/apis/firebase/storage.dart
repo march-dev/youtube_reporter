@@ -21,6 +21,10 @@ class FirStorage {
           .toList();
     }
 
+    if (items.isEmpty) {
+      return [];
+    }
+
     final newLastFile =
         (items..sort((a, b) => a.name.compareTo(b.name))).last.name;
     SharedPref().setString(_keyYouTubeProcessedFiles, newLastFile);
