@@ -201,8 +201,13 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style = TextStyle(
+      fontSize: 11,
+      color: AppTheme.onBackgroundColor.withOpacity(0.5),
+    );
+
     return ValueListenableBuilder<bool>(
-      valueListenable: youTubeTaskProcessing,
+      valueListenable: taskLoopProcessing,
       builder: (context, value, child) {
         return AnimatedCrossFade(
           duration: kThemeAnimationDuration,
@@ -218,10 +223,21 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
           const SizedBox(height: 2),
           Text(
             AppLocale.homeReportingInProgress,
-            style: TextStyle(
-              fontSize: 11,
-              color: AppTheme.onBackgroundColor.withOpacity(0.5),
-            ),
+            style: style,
+          ),
+          ValueListenableBuilder(
+            valueListenable: taskLoopTotal,
+            builder: (context, total, _) {
+              return ValueListenableBuilder(
+                valueListenable: taskLoopCurrent,
+                builder: (context, current, _) {
+                  return Text(
+                    '$current/$total',
+                    style: style,
+                  );
+                },
+              );
+            },
           ),
         ],
       ),

@@ -143,7 +143,7 @@ class YouTubeService {
       ['snippet', 'id'],
       channelId: channelId,
       order: 'date',
-      maxResults: 50,
+      maxResults: 25,
     );
 
     final ids = result.items
@@ -166,6 +166,6 @@ class YouTubeService {
       comments: reportAbuseComment,
     ));
 
-    await Future.delayed(const Duration(seconds: 10));
+    await Future.delayed(const Duration(minutes: 1));
   }
 }
