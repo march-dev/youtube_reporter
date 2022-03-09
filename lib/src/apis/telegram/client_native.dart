@@ -3,6 +3,7 @@ import 'dart:isolate';
 import 'dart:math' show Random;
 
 import 'package:flutter/foundation.dart';
+import 'package:social_reporter/core.dart';
 import 'package:tdlib/td_api.dart';
 import 'package:tdlib/tdlib.dart';
 
@@ -73,7 +74,6 @@ class TelegramClient {
   }
 
   Future<void> _receiver(dynamic newEvent) async {
-    print('_receiver $newEvent');
     final event = convertToObject(newEvent);
     if (event == null) {
       return;
@@ -109,7 +109,7 @@ class TelegramClient {
       try {
         tdSend(_client, event, rndId);
       } catch (e) {
-        print(e);
+        logError(e);
       }
 
       return null;

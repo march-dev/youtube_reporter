@@ -16,11 +16,16 @@ dependencies:
   # UI
   cupertino_icons: ^1.0.2
 
+  # Storage
+  shared_preferences: ^2.0.13
+
   # Auth
   google_sign_in: ^5.2.4
   extension_google_sign_in_as_googleapis_auth: ^2.0.4
 
   # APIs
+  firebase_core: ^1.13.1
+  firebase_storage: ^10.2.9
   googleapis: ^8.1.0
   tdlib: # 1.6.0
     git:

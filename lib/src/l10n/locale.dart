@@ -11,15 +11,18 @@ class AppLocale {
   static const generalError = 'Error occured!';
 
   static const homeLoginToTelegram = 'Login to Telegram';
-  static const homeLoggedInTelegram = 'Succefully logged in to Telegram';
+  static const homeLoggedInTelegram = 'Logged in to Telegram';
   static const homeLoginToYouTube = 'Login to YouTube';
-  static const homeLoggedInYouTube = 'Succefully logged in to YouTube';
+  static String homeLoggedInYouTube(String email) =>
+      'Logged in to YouTube as $email';
   static const homeLoginToTwitter = 'Login to Twitter';
-  static const homeLoggedInTwitter = 'Succefully logged in to Twitter';
+  static const homeLoggedInTwitter = 'Logged in to Twitter';
   static const homeLoginToFacebook = 'Login to Facebook';
-  static const homeLoggedInFacebook = 'Succefully logged in to Facebook';
+  static const homeLoggedInFacebook = 'Logged in to Facebook';
   static const homeLoginToInstagram = 'Login to Intagram';
-  static const homeLoggedInInstagram = 'Succefully logged in to Instagram';
+  static const homeLoggedInInstagram = 'Logged in to Instagram';
+  static const homeReportingInProgress =
+      'Reporting in progress. Please wait...';
 
   static const telegramEnterPhoneTitle = 'Enter phone number';
   static const telegramEnterPhoneHint = 'Type phone number here...';

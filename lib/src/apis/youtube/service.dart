@@ -1,5 +1,4 @@
 import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/youtube/v3.dart';
 import 'package:social_reporter/core.dart';
@@ -12,11 +11,20 @@ class YouTubeService {
   late GoogleSignIn _googleSignIn;
   late YouTubeApi _youtubeApi;
 
+  bool _isLoggedIn = false;
+
+  bool get isLoggedIn => _isLoggedIn;
+
+  String get loggedInAs => _googleSignIn.currentUser!.email;
+
   Future<void> init() async {
     _googleSignIn = GoogleSignIn(
+      clientId: AppEnv.googleApiKey,
       scopes: [
         'email',
         YouTubeApi.youtubeReadonlyScope,
+        YouTubeApi.youtubeForceSslScope,
+        YouTubeApi.youtubepartnerScope,
       ],
     );
   }
@@ -25,11 +33,13 @@ class YouTubeService {
     try {
       await _googleSignIn.signIn();
     } catch (e) {
-      debugPrint(e.toString());
+      logError(e);
+      _isLoggedIn = false;
       return false;
     }
 
     final loggedIn = await _googleSignIn.isSignedIn();
+    _isLoggedIn = loggedIn;
 
     if (!loggedIn) {
       return false;
@@ -50,9 +60,9 @@ class YouTubeService {
     final reasons =
         await _youtubeApi.videoAbuseReportReasons.list(['id', 'snippet']);
     for (var item in reasons.items!) {
-      print('[][][] ${item.snippet?.label} ${item.id}');
+      log('${item.snippet?.label} ${item.id}');
       for (var secItem in item.snippet?.secondaryReasons ?? []) {
-        print('[][][]   ${secItem.label} ${secItem.id}');
+        log('   ${secItem.label} ${secItem.id}');
       }
     }
 
@@ -93,6 +103,11 @@ class YouTubeService {
               .toList() ??
           [];
 
+      if (resultItems.isEmpty) {
+        log('Not found channel with customUrl: $customUrl');
+        return;
+      }
+
       final channelResponse = await _youtubeApi.channels.list(
         ['snippet', 'id'],
         id: resultItems.map((item) => item.id!.channelId!).toList(),
@@ -108,14 +123,20 @@ class YouTubeService {
         }
       }
     } else {
-      final channels = await _youtubeApi.channels.list(
+      final result = await _youtubeApi.channels.list(
         ['snippet', 'id'],
         id: id != null ? [id] : null,
         forUsername: username,
         maxResults: 1,
       );
+      final resultItems = result.items ?? [];
 
-      channelId = channels.items!.first.id;
+      if (resultItems.isEmpty) {
+        log('Not found channel with id/username: $id/$username');
+        return;
+      }
+
+      channelId = resultItems.first.id;
     }
 
     final result = await _youtubeApi.search.list(
@@ -133,7 +154,7 @@ class YouTubeService {
         <String>[];
 
     for (var id in ids) {
-      reportVideo(id);
+      await reportVideo(id);
     }
   }
 

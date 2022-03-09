@@ -10,8 +10,8 @@ class YouTubeLink {
     this.channelCustomUrl,
   });
 
-  factory YouTubeLink.fromLink(String link) {
-    final safeLink = replaceEmoji(link);
+  factory YouTubeLink.fromString(String link) {
+    final safeLink = replaceEmoji(link).trim();
 
     String? videoId;
     String? channelId;

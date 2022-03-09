@@ -16,6 +16,14 @@ class _HomePageState extends State<HomePage> {
   bool _twitterLoggedIn = false;
 
   Future<void> _onLoginTelegramPressed() async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: AppTheme.warningColor,
+        content: Text(AppLocale.inDevelopment),
+      ),
+    );
+    return;
+
     _telegramLoggedIn =
         await TelegramAuthDialog.open(context, TelegramService());
     setState(() {});
@@ -27,8 +35,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onLoginTwitterPressed() {
-    YouTubeService().reportChannelVideos();
-
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: AppTheme.warningColor,
@@ -38,8 +44,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    youTubeTaskLoop();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const _AppBar(),
       body: Center(
         child: ListView(
           shrinkWrap: true,
@@ -48,21 +61,22 @@ class _HomePageState extends State<HomePage> {
               loggedIn: _telegramLoggedIn,
               onPressed: _onLoginTelegramPressed,
               title: AppLocale.homeLoginToTelegram,
-              successText: AppLocale.homeLoggedInTelegram,
+              successTextBuilder: () => AppLocale.homeLoggedInTelegram,
             ),
             const SizedBox(height: 24),
             _AdaptiveButton(
               loggedIn: _youtubeLoggedIn,
               onPressed: _onLoginYouTubePressed,
               title: AppLocale.homeLoginToYouTube,
-              successText: AppLocale.homeLoggedInYouTube,
+              successTextBuilder: () =>
+                  AppLocale.homeLoggedInYouTube(YouTubeService().loggedInAs),
             ),
             const SizedBox(height: 24),
             _AdaptiveButton(
               loggedIn: _twitterLoggedIn,
               onPressed: _onLoginTwitterPressed,
               title: AppLocale.homeLoginToTwitter,
-              successText: AppLocale.homeLoggedInTwitter,
+              successTextBuilder: () => AppLocale.homeLoggedInTwitter,
             ),
             const SizedBox(height: 24),
           ],
@@ -78,19 +92,19 @@ class _AdaptiveButton extends StatelessWidget {
     required this.loggedIn,
     required this.onPressed,
     required this.title,
-    required this.successText,
+    required this.successTextBuilder,
   }) : super(key: key);
 
   final bool loggedIn;
   final VoidCallback? onPressed;
   final String title;
-  final String successText;
+  final ValueGetter<String> successTextBuilder;
 
   @override
   Widget build(BuildContext context) {
     Widget content;
     if (loggedIn) {
-      content = _LoggedIn(text: successText);
+      content = _LoggedIn(text: successTextBuilder());
     } else {
       content = _Button(
         onPressed: onPressed,
@@ -153,6 +167,42 @@ class _LoggedIn extends StatelessWidget {
           color: AppTheme.successColor,
         ),
       ],
+    );
+  }
+}
+
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar({Key? key}) : super(key: key);
+
+  @override
+  Size get preferredSize => const Size.fromHeight(40);
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: youTubeTaskProcessing,
+      builder: (context, value, child) {
+        return AnimatedCrossFade(
+          duration: kThemeAnimationDuration,
+          crossFadeState:
+              value ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          firstChild: child!,
+          secondChild: Container(),
+        );
+      },
+      child: Column(
+        children: [
+          const LinearProgressIndicator(),
+          const SizedBox(height: 2),
+          Text(
+            AppLocale.homeReportingInProgress,
+            style: TextStyle(
+              fontSize: 11,
+              color: AppTheme.onBackgroundColor.withOpacity(0.5),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

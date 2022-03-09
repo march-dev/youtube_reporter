@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tdlib/tdlib.dart';
 
 import 'core.dart';
 import 'src/app.dart';
@@ -8,17 +6,19 @@ import 'src/app.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (kIsWeb) {
-    await TdPlugin.initialize();
-  } else {
-    await TdPlugin.initialize('libtdjson.1.8.1.dylib');
-  }
-
-  GoogleAuthInitializer.init();
+  await SharedPref().init();
+  await FirInitializer.init();
   YouTubeService().init();
 
-  final client = TelegramClient();
-  TelegramService().init(client);
+  // TODO: uncomment when it will work
+  // if (kIsWeb) {
+  //   await TdPlugin.initialize();
+  // } else {
+  //   await TdPlugin.initialize('libtdjson.1.8.1.dylib');
+  // }
+
+  // final client = TelegramClient();
+  // TelegramService().init(client);
 
   runApp(const App());
 }
