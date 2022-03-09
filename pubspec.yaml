@@ -1,6 +1,6 @@
 name: social_reporter
 description: A new Flutter project.
-version: 1.0.0+1
+version: 1.1.0+8
 
 publish_to: 'none'
 
@@ -15,6 +15,9 @@ dependencies:
 
   # UI
   cupertino_icons: ^1.0.2
+
+  # System
+  package_info_plus: ^1.4.0
 
   # Storage
   shared_preferences: ^2.0.13

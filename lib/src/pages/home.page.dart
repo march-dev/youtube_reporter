@@ -69,39 +69,38 @@ class _HomePageState extends State<HomePage> {
               color: Colors.yellow,
             ),
           ),
-          const Spacer(),
-          Expanded(
-            flex: 8,
-            child: Center(
-              child: ListView(
-                shrinkWrap: true,
-                children: <Widget>[
-                  _AdaptiveButton(
-                    loggedIn: _telegramLoggedIn,
-                    onPressed: _onLoginTelegramPressed,
-                    title: AppLocale.homeLoginToTelegram,
-                    successTextBuilder: () => AppLocale.homeLoggedInTelegram,
-                  ),
-                  const SizedBox(height: 24),
-                  _AdaptiveButton(
-                    loggedIn: _youtubeLoggedIn,
-                    onPressed: _onLoginYouTubePressed,
-                    title: AppLocale.homeLoginToYouTube,
-                    successTextBuilder: () => AppLocale.homeLoggedInYouTube(
-                        YouTubeService().loggedInAs),
-                  ),
-                  const SizedBox(height: 24),
-                  _AdaptiveButton(
-                    loggedIn: _twitterLoggedIn,
-                    onPressed: _onLoginTwitterPressed,
-                    title: AppLocale.homeLoginToTwitter,
-                    successTextBuilder: () => AppLocale.homeLoggedInTwitter,
-                  ),
-                  const SizedBox(height: 24),
-                ],
-              ),
+          const Spacer(flex: 5),
+          _AdaptiveButton(
+            loggedIn: _telegramLoggedIn,
+            onPressed: _onLoginTelegramPressed,
+            title: AppLocale.homeLoginToTelegram,
+            successTextBuilder: () => AppLocale.homeLoggedInTelegram,
+          ),
+          const SizedBox(height: 24),
+          _AdaptiveButton(
+            loggedIn: _youtubeLoggedIn,
+            onPressed: _onLoginYouTubePressed,
+            title: AppLocale.homeLoginToYouTube,
+            successTextBuilder: () =>
+                AppLocale.homeLoggedInYouTube(YouTubeService().loggedInAs),
+          ),
+          const SizedBox(height: 24),
+          _AdaptiveButton(
+            loggedIn: _twitterLoggedIn,
+            onPressed: _onLoginTwitterPressed,
+            title: AppLocale.homeLoginToTwitter,
+            successTextBuilder: () => AppLocale.homeLoggedInTwitter,
+          ),
+          const SizedBox(height: 24),
+          const Spacer(flex: 4),
+          Text(
+            AppEnv.appVersion,
+            style: TextStyle(
+              fontSize: 11,
+              color: AppTheme.onBackgroundColor.withOpacity(0.5),
             ),
           ),
+          const SizedBox(height: 8),
         ],
       ),
     );

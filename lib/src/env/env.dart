@@ -1,5 +1,14 @@
+import 'package:package_info_plus/package_info_plus.dart';
+
 class AppEnv {
   const AppEnv._();
+
+  static Future<void> init() async {
+    final info = await PackageInfo.fromPlatform();
+    appVersion = '${info.version}+${info.buildNumber}';
+  }
+
+  static late final String appVersion;
 
   static const googleApiKey = String.fromEnvironment('google_api_key');
 
