@@ -153,12 +153,16 @@ class YouTubeService {
             .toList() ??
         <String>[];
 
+    log('Reporting channel $channelId (${DateTime.now().toIso8601String()})');
+
     for (var id in ids) {
       await reportVideo(id);
     }
   }
 
   Future<void> reportVideo(String id) async {
+    log('Reporting video $id (${DateTime.now().toIso8601String()})');
+
     await _youtubeApi.videos.reportAbuse(VideoAbuseReport(
       videoId: id,
       reasonId: 'V',
