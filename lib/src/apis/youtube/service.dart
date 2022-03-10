@@ -3,6 +3,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/youtube/v3.dart';
 import 'package:social_reporter/core.dart';
 
+const _reportDelay = Duration(minutes: 3);
+const _retryDelay = Duration(minutes: 10);
+
 class YouTubeService {
   factory YouTubeService() => _instance;
   YouTubeService._();
@@ -153,23 +156,37 @@ class YouTubeService {
             .toList() ??
         <String>[];
 
-    log('Reporting channel $channelId (${DateTime.now().toIso8601String()})');
+    log('Reporting channel $channelId');
 
+    taskLoopTotal.value = taskLoopTotal.value + ids.length - 1;
     for (var id in ids) {
       await reportVideo(id);
     }
   }
 
   Future<void> reportVideo(String id) async {
-    log('Reporting video $id (${DateTime.now().toIso8601String()})');
+    log('Reporting video $id');
 
-    await _youtubeApi.videos.reportAbuse(VideoAbuseReport(
-      videoId: id,
-      reasonId: 'V',
-      secondaryReasonId: '35',
-      comments: reportAbuseComment,
-    ));
+    try {
+      await _youtubeApi.videos.reportAbuse(VideoAbuseReport(
+        videoId: id,
+        reasonId: 'V',
+        secondaryReasonId: '35',
+        comments: reportAbuseComment,
+      ));
+    } on DetailedApiRequestError catch (e, trace) {
+      if (e.message == youtubeReportAbuseTooManyRqErrorMessage) {
+        log('Retrying in ${_retryDelay.inMinutes} minutes...');
+        await Future.delayed(_retryDelay);
+        reportVideo(id);
+        return;
+      }
 
-    await Future.delayed(const Duration(minutes: 1));
+      logError(e, trace);
+    }
+
+    taskLoopCurrent.value = taskLoopCurrent.value + 1;
+
+    await Future.delayed(_reportDelay);
   }
 }

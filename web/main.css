@@ -1,0 +1,27 @@
+body {
+  background-color: #050F20;
+  margin: auto;
+  width: 600px;
+  padding: 24px;
+}
+
+h1,
+h2 {
+  color: #EEE;
+}
+
+h3,
+strong {
+  color: #CCC;
+}
+
+p,
+ul,
+li {
+  text-align: justify;
+  color: #AAA;
+}
+
+a {
+  color: #FFEB3B;
+}

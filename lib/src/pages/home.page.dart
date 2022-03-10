@@ -1,7 +1,14 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:social_reporter/core.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'telegram/auth.dialog.dart';
+
+final _headerFooterStyle = TextStyle(
+  fontSize: 11,
+  color: AppTheme.onBackgroundColor.withOpacity(0.5),
+);
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -93,12 +100,11 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 24),
           const Spacer(flex: 4),
+          const _Links(),
+          const SizedBox(height: 4),
           Text(
             AppEnv.appVersion,
-            style: TextStyle(
-              fontSize: 11,
-              color: AppTheme.onBackgroundColor.withOpacity(0.5),
-            ),
+            style: _headerFooterStyle,
           ),
           const SizedBox(height: 8),
         ],
@@ -192,6 +198,87 @@ class _LoggedIn extends StatelessWidget {
   }
 }
 
+class _Links extends StatelessWidget {
+  const _Links({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const _Link(
+          title: AppLocale.homeAbout,
+          link: 'about.html',
+        ),
+        Text(' | ', style: _headerFooterStyle),
+        const _Link(
+          title: AppLocale.homePrivacy,
+          link: 'privacy.html',
+        ),
+      ],
+    );
+  }
+}
+
+class _Link extends StatefulWidget {
+  const _Link({
+    Key? key,
+    required this.title,
+    required this.link,
+  }) : super(key: key);
+
+  final String title;
+  final String link;
+
+  @override
+  State<_Link> createState() => _LinkState();
+}
+
+class _LinkState extends State<_Link> {
+  final _recognizer = TapGestureRecognizer();
+
+  bool _isHovering = false;
+
+  @override
+  void initState() {
+    _recognizer.onTap = () => launch(widget.link);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final style = _headerFooterStyle.copyWith(
+      decoration: TextDecoration.underline,
+      decorationStyle: TextDecorationStyle.solid,
+      decorationColor: _headerFooterStyle.color,
+    );
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovering = true),
+      onExit: (_) => setState(() => _isHovering = false),
+      child: Text.rich(
+        TextSpan(
+          text: widget.title,
+          recognizer: _recognizer,
+        ),
+        style: _isHovering
+            ? style.copyWith(
+                color: AppTheme.primaryColor,
+                decorationColor: AppTheme.primaryColor,
+              )
+            : style,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _recognizer.dispose();
+    super.dispose();
+  }
+}
+
 class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   const _AppBar({Key? key}) : super(key: key);
 
@@ -200,11 +287,6 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = TextStyle(
-      fontSize: 11,
-      color: AppTheme.onBackgroundColor.withOpacity(0.5),
-    );
-
     return ValueListenableBuilder<bool>(
       valueListenable: taskLoopProcessing,
       builder: (context, value, child) {
@@ -222,7 +304,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
           const SizedBox(height: 2),
           Text(
             AppLocale.homeReportingInProgress,
-            style: style,
+            style: _headerFooterStyle,
           ),
           ValueListenableBuilder(
             valueListenable: taskLoopTotal,
@@ -232,7 +314,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
                 builder: (context, current, _) {
                   return Text(
                     '$current/$total',
-                    style: style,
+                    style: _headerFooterStyle,
                   );
                 },
               );

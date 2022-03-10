@@ -3,6 +3,7 @@ export 'src/apis/firebase/storage.dart';
 export 'src/apis/telegram/client.dart';
 export 'src/apis/telegram/service.dart';
 export 'src/apis/youtube/service.dart';
+export 'src/constants/exception_messages.dart';
 export 'src/constants/report_comments.dart';
 export 'src/env/env.dart';
 export 'src/l10n/locale.dart';

@@ -11,7 +11,7 @@ Future<void> main() async {
   await FirInitializer.init();
   YouTubeService().init();
 
-  // TODO: uncomment when it will work
+  // TODO: uncomment when it works
   // if (kIsWeb) {
   //   await TdPlugin.initialize();
   // } else {

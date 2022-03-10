@@ -17,6 +17,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   # System
+  url_launcher: ^6.0.20
   package_info_plus: ^1.4.0
 
   # Storage

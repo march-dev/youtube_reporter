@@ -1,10 +1,13 @@
+String get _logPrefix =>
+    '[socialreporter][${DateTime.now().toIso8601String()}]';
+
 void log(String message) {
-  print('[socialreporter] $message');
+  print('$_logPrefix $message');
 }
 
 void logError(Object e, [StackTrace? trace]) {
-  print('[socialreporter] error: $e');
+  print('$_logPrefix error: $e');
   if (trace != null) {
-    print('[socialreporter] trace: $trace');
+    print('$_logPrefix trace: $trace');
   }
 }
