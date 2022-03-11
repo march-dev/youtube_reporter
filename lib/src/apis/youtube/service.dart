@@ -193,6 +193,18 @@ class YouTubeService {
         await reportVideo(id);
       }
     } catch (e, trace) {
+      if (isAccessDeniedException(e)) {
+        log('Login session ended. Creating new one...');
+        await loginSilently();
+        log('New login session created. Retrying channel reporting...');
+        reportChannelVideos(
+          id: id,
+          username: username,
+          customUrl: customUrl,
+        );
+        return;
+      }
+
       logError(e, trace);
     }
   }
@@ -222,6 +234,14 @@ class YouTubeService {
 
       logError(e, trace);
     } catch (e, trace) {
+      if (isAccessDeniedException(e)) {
+        log('Login session ended. Creating new one...');
+        await loginSilently();
+        log('New login session created. Retrying video reporting...');
+        reportVideo(id);
+        return;
+      }
+
       logError(e, trace);
     }
 
