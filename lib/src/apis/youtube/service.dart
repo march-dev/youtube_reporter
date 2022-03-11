@@ -136,6 +136,7 @@ class YouTubeService {
 
         if (resultItems.isEmpty) {
           log('Not found channel with customUrl: $customUrl');
+          taskLoopCurrent.value = taskLoopCurrent.value + 1;
           return;
         }
 
@@ -164,6 +165,7 @@ class YouTubeService {
 
         if (resultItems.isEmpty) {
           log('Not found channel with id/username: $id/$username');
+          taskLoopCurrent.value = taskLoopCurrent.value + 1;
           return;
         }
 
@@ -214,6 +216,7 @@ class YouTubeService {
       }
       if (e.message == youtubeReportAbuseVideoNotFoundErrorMessage) {
         log('Video $id not found. Skipping...');
+        taskLoopCurrent.value = taskLoopCurrent.value + 1;
         return;
       }
 
