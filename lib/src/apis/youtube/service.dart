@@ -189,6 +189,7 @@ class YouTubeService {
       log('Reporting channel $channelId');
 
       taskLoopTotal.value = taskLoopTotal.value + ids.length - 1;
+
       for (var id in ids) {
         await reportVideo(id);
       }
@@ -197,7 +198,7 @@ class YouTubeService {
         log('Login session ended. Creating new one...');
         await loginSilently();
         log('New login session created. Retrying channel reporting...');
-        reportChannelVideos(
+        await reportChannelVideos(
           id: id,
           username: username,
           customUrl: customUrl,
@@ -223,7 +224,7 @@ class YouTubeService {
       if (e.message == youtubeReportAbuseTooManyRqErrorMessage) {
         log('Retrying in ${_retryDelay.inMinutes} minutes...');
         await Future.delayed(_retryDelay);
-        reportVideo(id);
+        await reportVideo(id);
         return;
       }
       if (e.message == youtubeReportAbuseVideoNotFoundErrorMessage) {
@@ -238,7 +239,7 @@ class YouTubeService {
         log('Login session ended. Creating new one...');
         await loginSilently();
         log('New login session created. Retrying video reporting...');
-        reportVideo(id);
+        await reportVideo(id);
         return;
       }
 

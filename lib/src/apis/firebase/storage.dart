@@ -4,11 +4,16 @@ import 'package:collection/collection.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:social_reporter/core.dart';
 
-const _keyYouTubeProcessedFiles = 'key_youtube_processed_files';
+const _keyYouTubeLastProcessedFile = 'key_youtube_last_processed_file';
+const _keyYouTubeCurrentProcessingFile = 'key_youtube_current_processing_file';
 
 class FirStorage {
   List<Reference>? _youtubeFiles;
-  Reference? _currentYouTubeFile;
+
+  String? get _currentYouTubeFile =>
+      SharedPref().getString(_keyYouTubeCurrentProcessingFile);
+  set _currentYouTubeFile(String? value) =>
+      SharedPref().setString(_keyYouTubeCurrentProcessingFile, value ?? '');
 
   Future<List<Reference>> _getYouTubeFiles() async {
     final result = await FirebaseStorage.instance.ref('youtube/').listAll();
@@ -29,7 +34,7 @@ class FirStorage {
     final refs = _youtubeFiles?.isNotEmpty == true
         ? _youtubeFiles!
         : await _getYouTubeFiles();
-    final lastFile = SharedPref().getString(_keyYouTubeProcessedFiles);
+    final lastFile = SharedPref().getString(_keyYouTubeLastProcessedFile);
 
     if (lastFile == null) {
       return refs.firstOrNull;
@@ -43,10 +48,15 @@ class FirStorage {
   Future<List<String>> getYouTubeLinks() async {
     final ref = await _getNextYouTubeFile();
     final result = <String>[];
-    _currentYouTubeFile = ref;
+
+    if (ref == null) {
+      return [];
+    }
+
+    _currentYouTubeFile = ref.name;
 
     try {
-      final data = await ref?.getData();
+      final data = await ref.getData();
       if (data != null) {
         final plainStringData = utf8.decode(data);
         final links = plainStringData.split('\n');
@@ -60,5 +70,5 @@ class FirStorage {
   }
 
   void markCurrentYouTubeFileAsProcessed() => SharedPref()
-      .setString(_keyYouTubeProcessedFiles, _currentYouTubeFile!.name);
+      .setString(_keyYouTubeLastProcessedFile, _currentYouTubeFile!);
 }
