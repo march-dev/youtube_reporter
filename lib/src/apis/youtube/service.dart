@@ -59,6 +59,33 @@ class YouTubeService {
     return true;
   }
 
+  Future<bool> loginSilently() async {
+    try {
+      await _googleSignIn.signInSilently();
+    } catch (e) {
+      logError(e);
+      _isLoggedIn = false;
+      return false;
+    }
+
+    final loggedIn = await _googleSignIn.isSignedIn();
+    _isLoggedIn = loggedIn;
+
+    if (!loggedIn) {
+      return false;
+    }
+
+    final client = await _googleSignIn.authenticatedClient();
+
+    if (client == null) {
+      return false;
+    }
+
+    _youtubeApi = YouTubeApi(client);
+
+    return true;
+  }
+
   Future<void> printAllAbuseReportReasons() async {
     final reasons =
         await _youtubeApi.videoAbuseReportReasons.list(['id', 'snippet']);
@@ -92,75 +119,79 @@ class YouTubeService {
     String? username,
     String? customUrl,
   }) async {
-    String? channelId;
+    try {
+      String? channelId;
 
-    if (customUrl != null) {
-      final result = await _youtubeApi.search.list(
-        ['id'],
-        q: customUrl,
-        type: ['channel'],
-        $fields: 'items(id(kind,channelId))',
-      );
-      final resultItems = result.items
-              ?.where((item) => item.id!.kind == 'youtube#channel')
-              .toList() ??
-          [];
+      if (customUrl != null) {
+        final result = await _youtubeApi.search.list(
+          ['id'],
+          q: customUrl,
+          type: ['channel'],
+          $fields: 'items(id(kind,channelId))',
+        );
+        final resultItems = result.items
+                ?.where((item) => item.id!.kind == 'youtube#channel')
+                .toList() ??
+            [];
 
-      if (resultItems.isEmpty) {
-        log('Not found channel with customUrl: $customUrl');
-        return;
-      }
-
-      final channelResponse = await _youtubeApi.channels.list(
-        ['snippet', 'id'],
-        id: resultItems.map((item) => item.id!.channelId!).toList(),
-        $fields: 'items(id,snippet(customUrl))',
-        maxResults: resultItems.length,
-      );
-      final channelItems = channelResponse.items ?? [];
-
-      for (var channel in channelItems) {
-        if (channel.snippet?.customUrl?.isNotEmpty == true) {
-          channelId = channel.id;
-          break;
+        if (resultItems.isEmpty) {
+          log('Not found channel with customUrl: $customUrl');
+          return;
         }
+
+        final channelResponse = await _youtubeApi.channels.list(
+          ['snippet', 'id'],
+          id: resultItems.map((item) => item.id!.channelId!).toList(),
+          $fields: 'items(id,snippet(customUrl))',
+          maxResults: resultItems.length,
+        );
+        final channelItems = channelResponse.items ?? [];
+
+        for (var channel in channelItems) {
+          if (channel.snippet?.customUrl?.isNotEmpty == true) {
+            channelId = channel.id;
+            break;
+          }
+        }
+      } else {
+        final result = await _youtubeApi.channels.list(
+          ['snippet', 'id'],
+          id: id != null ? [id] : null,
+          forUsername: username,
+          maxResults: 1,
+        );
+        final resultItems = result.items ?? [];
+
+        if (resultItems.isEmpty) {
+          log('Not found channel with id/username: $id/$username');
+          return;
+        }
+
+        channelId = resultItems.first.id;
       }
-    } else {
-      final result = await _youtubeApi.channels.list(
+
+      final result = await _youtubeApi.search.list(
         ['snippet', 'id'],
-        id: id != null ? [id] : null,
-        forUsername: username,
-        maxResults: 1,
+        channelId: channelId,
+        order: 'date',
+        maxResults: 25,
       );
-      final resultItems = result.items ?? [];
 
-      if (resultItems.isEmpty) {
-        log('Not found channel with id/username: $id/$username');
-        return;
+      final ids = result.items
+              ?.map((item) => item.id?.videoId)
+              .where((id) => id != null)
+              .map((id) => id!)
+              .toList() ??
+          <String>[];
+
+      log('Reporting channel $channelId');
+
+      taskLoopTotal.value = taskLoopTotal.value + ids.length - 1;
+      for (var id in ids) {
+        await reportVideo(id);
       }
-
-      channelId = resultItems.first.id;
-    }
-
-    final result = await _youtubeApi.search.list(
-      ['snippet', 'id'],
-      channelId: channelId,
-      order: 'date',
-      maxResults: 25,
-    );
-
-    final ids = result.items
-            ?.map((item) => item.id?.videoId)
-            .where((id) => id != null)
-            .map((id) => id!)
-            .toList() ??
-        <String>[];
-
-    log('Reporting channel $channelId');
-
-    taskLoopTotal.value = taskLoopTotal.value + ids.length - 1;
-    for (var id in ids) {
-      await reportVideo(id);
+    } catch (e, trace) {
+      logError(e, trace);
     }
   }
 
@@ -181,7 +212,13 @@ class YouTubeService {
         reportVideo(id);
         return;
       }
+      if (e.message == youtubeReportAbuseVideoNotFoundErrorMessage) {
+        log('Video $id not found. Skipping...');
+        return;
+      }
 
+      logError(e, trace);
+    } catch (e, trace) {
       logError(e, trace);
     }
 

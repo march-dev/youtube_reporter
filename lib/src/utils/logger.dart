@@ -6,7 +6,7 @@ void log(String message) {
 }
 
 void logError(Object e, [StackTrace? trace]) {
-  print('$_logPrefix error: $e');
+  print('$_logPrefix error: (${e.runtimeType}) $e');
   if (trace != null) {
     print('$_logPrefix trace: $trace');
   }
