@@ -119,9 +119,9 @@ class _PhoneStepState extends State<_PhoneStep> {
     return Column(
       children: [
         const SizedBox(height: 24),
-        const Text(
+        Text(
           AppLocale.telegramEnterPhoneTitle,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -146,7 +146,7 @@ class _PhoneStepState extends State<_PhoneStep> {
         const Spacer(),
         ElevatedButton(
           onPressed: _onPhoneEnteredPressed,
-          child: const Text(AppLocale.next),
+          child: Text(AppLocale.next),
         ),
         const SizedBox(height: 24),
       ],
@@ -195,9 +195,9 @@ class _OtpStepState extends State<_OtpStep> {
     return Column(
       children: [
         const SizedBox(height: 24),
-        const Text(
+        Text(
           AppLocale.telegramEnterOtpTitle,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -222,7 +222,7 @@ class _OtpStepState extends State<_OtpStep> {
         const Spacer(),
         ElevatedButton(
           onPressed: _onOtpEnteredPressed,
-          child: const Text(AppLocale.submit),
+          child: Text(AppLocale.submit),
         ),
         const SizedBox(height: 24),
       ],

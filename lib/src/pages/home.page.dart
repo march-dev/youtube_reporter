@@ -20,11 +20,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _telegramLoggedIn = false;
   bool _youtubeLoggedIn = false;
-  bool _twitterLoggedIn = false;
 
   Future<void> _onLoginTelegramPressed() async {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         backgroundColor: AppTheme.warningColor,
         content: Text(AppLocale.inDevelopment),
       ),
@@ -39,15 +38,6 @@ class _HomePageState extends State<HomePage> {
   Future<void> _onLoginYouTubePressed() async {
     _youtubeLoggedIn = await YouTubeService().login();
     setState(() {});
-  }
-
-  void _onLoginTwitterPressed() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        backgroundColor: AppTheme.warningColor,
-        content: Text(AppLocale.inDevelopment),
-      ),
-    );
   }
 
   @override
@@ -68,9 +58,9 @@ class _HomePageState extends State<HomePage> {
             backgroundImage: AssetImage('assets/logo.png'),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             AppLocale.homeTitle,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.bold,
               color: Colors.yellow,
@@ -90,13 +80,6 @@ class _HomePageState extends State<HomePage> {
             title: AppLocale.homeLoginToYouTube,
             successTextBuilder: () =>
                 AppLocale.homeLoggedInYouTube(YouTubeService().loggedInAs),
-          ),
-          const SizedBox(height: 24),
-          _AdaptiveButton(
-            loggedIn: _twitterLoggedIn,
-            onPressed: _onLoginTwitterPressed,
-            title: AppLocale.homeLoginToTwitter,
-            successTextBuilder: () => AppLocale.homeLoggedInTwitter,
           ),
           const SizedBox(height: 24),
           const Spacer(flex: 4),
@@ -206,12 +189,12 @@ class _Links extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const _Link(
+        _Link(
           title: AppLocale.homeAbout,
           link: 'about.html',
         ),
         Text(' | ', style: _headerFooterStyle),
-        const _Link(
+        _Link(
           title: AppLocale.homePrivacy,
           link: 'privacy.html',
         ),

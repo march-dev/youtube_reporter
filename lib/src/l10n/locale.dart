@@ -1,36 +1,56 @@
+import 'dart:ui';
+
+import 'locale.delegate.dart';
+import 'locale.en.dart';
+import 'locale.ua.dart';
+
+const ukLocale = 'uk';
+const enLocale = 'en';
+
 class AppLocale {
   const AppLocale._();
 
-  static const appTitle = 'Social Reporter';
+  static void init(Locale locale) {
+    if (locale.languageCode == ukLocale || locale.languageCode == 'ru') {
+      _locale = ukLocale;
+    } else {
+      _locale = enLocale;
+    }
+  }
 
-  static const next = 'Next';
-  static const submit = 'Submit';
+  static late String _locale;
 
-  static const inDevelopment = 'In development';
+  static const _delegates = <String, AppLocaleDelegate>{
+    ukLocale: AppLocaleUa(),
+    enLocale: AppLocaleEn(),
+  };
 
-  static const generalError = 'Error occured!';
+  static AppLocaleDelegate get _currDelegate => _delegates[_locale]!;
 
-  static const homeTitle = 'IT Спротив України';
-  static const homeAbout = 'About';
-  static const homePrivacy = 'Privacy';
-  static const homeLoginToTelegram = 'Login to Telegram';
-  static const homeLoggedInTelegram = 'Logged in to Telegram';
-  static const homeLoginToYouTube = 'Login to YouTube';
+  static final appTitle = _currDelegate.appTitle;
+
+  static final next = _currDelegate.next;
+  static final submit = _currDelegate.submit;
+
+  static final inDevelopment = _currDelegate.inDevelopment;
+
+  static final generalError = _currDelegate.generalError;
+
+  static final homeTitle = _currDelegate.homeTitle;
+  static final homeAbout = _currDelegate.homeAbout;
+  static final homePrivacy = _currDelegate.homePrivacy;
+  static final homeLoginToTelegram = _currDelegate.homeLoginToTelegram;
+  static final homeLoggedInTelegram = _currDelegate.homeLoggedInTelegram;
+  static final homeLoginToYouTube = _currDelegate.homeLoginToYouTube;
   static String homeLoggedInYouTube(String email) =>
-      'Logged in to YouTube as $email';
-  static const homeLoginToTwitter = 'Login to Twitter';
-  static const homeLoggedInTwitter = 'Logged in to Twitter';
-  static const homeLoginToFacebook = 'Login to Facebook';
-  static const homeLoggedInFacebook = 'Logged in to Facebook';
-  static const homeLoginToInstagram = 'Login to Intagram';
-  static const homeLoggedInInstagram = 'Logged in to Instagram';
-  static const homeReportingInProgress =
-      'Reporting in progress. Please wait...';
+      _currDelegate.homeLoggedInYouTube(email);
+  static final homeReportingInProgress = _currDelegate.homeReportingInProgress;
 
-  static const telegramEnterPhoneTitle = 'Enter phone number';
-  static const telegramEnterPhoneHint = 'Type phone number here...';
-  static const telegramEnterPhoneWrongPhone = 'Entered phone is not correct!';
+  static final telegramEnterPhoneTitle = _currDelegate.telegramEnterPhoneTitle;
+  static final telegramEnterPhoneHint = _currDelegate.telegramEnterPhoneHint;
+  static final telegramEnterPhoneWrongPhone =
+      _currDelegate.telegramEnterPhoneWrongPhone;
 
-  static const telegramEnterOtpTitle = 'Enter OTP code';
-  static const telegramEnterOtpHint = 'Type OTP code here...';
+  static final telegramEnterOtpTitle = _currDelegate.telegramEnterOtpTitle;
+  static final telegramEnterOtpHint = _currDelegate.telegramEnterOtpHint;
 }

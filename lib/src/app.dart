@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:social_reporter/core.dart';
 
 import 'pages/home.page.dart';
@@ -9,7 +10,19 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: AppLocale.appTitle,
+      onGenerateTitle: (context) {
+        AppLocale.init(Localizations.localeOf(context));
+        return AppLocale.appTitle;
+      },
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale(ukLocale, ''),
+        Locale(enLocale, ''),
+      ],
       theme: AppTheme.materialThemeData,
       home: const HomePage(),
     );
