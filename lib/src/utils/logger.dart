@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 String get _logPrefix =>
     '[socialreporter][${DateTime.now().toIso8601String()}]';
 
@@ -7,7 +9,7 @@ void log(String message) {
 
 void logError(Object e, [StackTrace? trace]) {
   print('$_logPrefix error: (${e.runtimeType}) $e');
-  if (trace != null) {
+  if (kDebugMode && trace != null) {
     print('$_logPrefix trace: $trace');
   }
 }
