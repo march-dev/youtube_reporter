@@ -109,7 +109,7 @@ class TelegramService {
   // !
   // ! Method section
   // !
-  Future<TdAuthStatus> _methodWrapper(
+  Future<TdAuthStatus> _authWrapper(
     ResultCallback action,
     ErrorCallback onError,
   ) async {
@@ -138,14 +138,14 @@ class TelegramService {
           useChatInfoDatabase: true,
           ignoreFileNames: true,
           enableStorageOptimizer: true,
-          systemLanguageCode: 'EN',
-          filesDirectory: _appExtDir,
-          databaseDirectory: _appDocDir,
-          applicationVersion: '0.0.1',
           deviceModel: 'Unknown',
           systemVersion: 'Unknonw',
           apiId: AppEnv.tdApiId,
           apiHash: AppEnv.tdApiHash,
+          systemLanguageCode: AppLocale.locale.toUpperCase(),
+          applicationVersion: AppEnv.appVersion,
+          filesDirectory: _appExtDir,
+          databaseDirectory: _appDocDir,
         ),
       ),
     );
@@ -155,7 +155,7 @@ class TelegramService {
     String phoneNumber, {
     required ErrorCallback onError,
   }) {
-    return _methodWrapper(
+    return _authWrapper(
       () => _client.send(
         SetAuthenticationPhoneNumber(
           phoneNumber: phoneNumber,
@@ -176,7 +176,7 @@ class TelegramService {
     String code, {
     required ErrorCallback onError,
   }) {
-    return _methodWrapper(
+    return _authWrapper(
       () => _client.send(
         CheckAuthenticationCode(
           code: code,
@@ -186,10 +186,11 @@ class TelegramService {
     );
   }
 
-  // Future<void> test(
-  //   String code, {
-  //   required ErrorCallback onError,
-  // }) async {
-  //   _client.send(GetChat);
+  // Future<void> test() async {
+  //   // CheckAuthenticationBotToken
+
+  //   final result = await _client.send(GetChat(chatId: 0));
+
+  //   log('getChat ${result.runtimeType}');
   // }
 }
