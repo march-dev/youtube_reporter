@@ -27,6 +27,8 @@ class AppLocale {
 
   static AppLocaleDelegate get _currDelegate => _delegates[_locale]!;
 
+  static String get locale => _locale;
+
   static final appTitle = _currDelegate.appTitle;
 
   static final next = _currDelegate.next;
