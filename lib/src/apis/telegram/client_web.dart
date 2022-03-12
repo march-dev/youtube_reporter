@@ -64,6 +64,7 @@ class TelegramClient {
   }
 
   static Future<void> _isolateLoop(html.Worker worker) async {
+    TdWebPlugin.registerWith();
     await TdPlugin.initialize();
 
     Future.doWhile(() async {
