@@ -221,15 +221,25 @@ class YouTubeService {
         comments: reportAbuseComment,
       ));
     } on DetailedApiRequestError catch (e, trace) {
-      if (e.message == youtubeReportAbuseTooManyRqErrorMessage) {
+      if (e.message == reportAbuseTooManyRqErrorMessage) {
         log('Retrying in ${_retryDelay.inMinutes} minutes...');
         await Future.delayed(_retryDelay);
         await reportVideo(id);
         return;
       }
-      if (e.message == youtubeReportAbuseVideoNotFoundErrorMessage) {
+      if (e.message == reportAbuseVideoNotFoundErrorMessage) {
         log('Video $id not found. Skipping...');
         taskLoopCurrent.value = taskLoopCurrent.value + 1;
+        return;
+      }
+      if (e.message == reportAbuseQuotaExceededErrorMessage) {
+        final newPtDayDelay = ptTimeToNextDay();
+        final hours = newPtDayDelay.inHours;
+        final minutes = newPtDayDelay.inMinutes - hours * 60;
+        final seconds = newPtDayDelay.inSeconds - minutes * 60;
+        log('Retrying in $hours hours $minutes minutes $seconds...');
+        await Future.delayed(newPtDayDelay);
+        await reportVideo(id);
         return;
       }
 

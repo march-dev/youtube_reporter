@@ -4,6 +4,7 @@ export 'src/apis/youtube/service.dart';
 export 'src/env/env.dart';
 export 'src/l10n/locale.dart';
 export 'src/theme/theme.dart';
+export 'src/utils/datetime.dart';
 export 'src/utils/exceptions.dart';
 export 'src/utils/link.parser.dart';
 export 'src/utils/logger.dart';
