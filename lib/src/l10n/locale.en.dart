@@ -7,14 +7,6 @@ class AppLocaleEn implements AppLocaleDelegate {
   final appTitle = 'YouTube Reporter';
 
   @override
-  final next = 'Next';
-  @override
-  final submit = 'Submit';
-
-  @override
-  final inDevelopment = 'In development';
-
-  @override
   final generalError = 'Error occured!';
 
   @override
@@ -33,16 +25,4 @@ class AppLocaleEn implements AppLocaleDelegate {
   final homeReportPossibleThreat = 'Send potential threat to verification';
   @override
   final homeReportingInProgress = 'Reporting in progress. Please wait...';
-
-  @override
-  final telegramEnterPhoneTitle = 'Enter phone number';
-  @override
-  final telegramEnterPhoneHint = 'Type phone number here...';
-  @override
-  final telegramEnterPhoneWrongPhone = 'Entered phone is not correct!';
-
-  @override
-  final telegramEnterOtpTitle = 'Enter OTP code';
-  @override
-  final telegramEnterOtpHint = 'Type OTP code here...';
 }

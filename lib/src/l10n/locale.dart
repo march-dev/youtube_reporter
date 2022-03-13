@@ -31,11 +31,6 @@ class AppLocale {
 
   static final appTitle = _currDelegate.appTitle;
 
-  static final next = _currDelegate.next;
-  static final submit = _currDelegate.submit;
-
-  static final inDevelopment = _currDelegate.inDevelopment;
-
   static final generalError = _currDelegate.generalError;
 
   static final homeTitle = _currDelegate.homeTitle;
@@ -48,12 +43,4 @@ class AppLocale {
   static final homeReportPossibleThreat =
       _currDelegate.homeReportPossibleThreat;
   static final homeReportingInProgress = _currDelegate.homeReportingInProgress;
-
-  static final telegramEnterPhoneTitle = _currDelegate.telegramEnterPhoneTitle;
-  static final telegramEnterPhoneHint = _currDelegate.telegramEnterPhoneHint;
-  static final telegramEnterPhoneWrongPhone =
-      _currDelegate.telegramEnterPhoneWrongPhone;
-
-  static final telegramEnterOtpTitle = _currDelegate.telegramEnterOtpTitle;
-  static final telegramEnterOtpHint = _currDelegate.telegramEnterOtpHint;
 }

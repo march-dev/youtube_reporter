@@ -1,11 +1,11 @@
 {
-    "name": "Social Reporter",
-    "short_name": "Social Reporter",
+    "name": "YouTube Reporter",
+    "short_name": "YouTube Reporter",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "Social Reporter app.",
+    "background_color": "#050F20",
+    "theme_color": "#050F20",
+    "description": "YouTube reporter is an app which main purpose is to make it easier to report abuse of videos that provokes violece/war/russian propaganda/terrorism.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

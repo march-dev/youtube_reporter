@@ -7,14 +7,6 @@ class AppLocaleUa implements AppLocaleDelegate {
   final appTitle = 'YouTube Reporter';
 
   @override
-  final next = 'Далі';
-  @override
-  final submit = 'Підтвердити';
-
-  @override
-  final inDevelopment = 'В розробці';
-
-  @override
   final generalError = 'Сталася помилка!';
 
   @override
@@ -35,16 +27,4 @@ class AppLocaleUa implements AppLocaleDelegate {
   @override
   final homeReportingInProgress =
       'Триває надсилання скарги. Зачекайте будь-ласка...';
-
-  @override
-  final telegramEnterPhoneTitle = 'Введіть номер телефону';
-  @override
-  final telegramEnterPhoneHint = 'Введіть номер телефону тут...';
-  @override
-  final telegramEnterPhoneWrongPhone = 'Введено некорректний телефон!';
-
-  @override
-  final telegramEnterOtpTitle = 'Введіть OTP код';
-  @override
-  final telegramEnterOtpHint = 'Введіть OTP код тут...';
 }

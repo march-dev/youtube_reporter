@@ -35,8 +35,8 @@ class YouTubeService {
   Future<bool> login() async {
     try {
       await _googleSignIn.signIn();
-    } catch (e) {
-      logError(e);
+    } catch (e, trace) {
+      logError(e, trace);
       _isLoggedIn = false;
       return false;
     }
@@ -62,8 +62,8 @@ class YouTubeService {
   Future<bool> loginSilently() async {
     try {
       await _googleSignIn.signInSilently();
-    } catch (e) {
-      logError(e);
+    } catch (e, trace) {
+      logError(e, trace);
       _isLoggedIn = false;
       return false;
     }
