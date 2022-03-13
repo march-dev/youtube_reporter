@@ -67,6 +67,8 @@ class _HomePageState extends State<HomePage> {
                 AppLocale.homeLoggedInYouTube(YouTubeService().loggedInAs),
           ),
           const SizedBox(height: 24),
+          const _ReportPossibleThreatButton(),
+          const SizedBox(height: 24),
           const Spacer(flex: 4),
           const _Links(),
           const SizedBox(height: 4),
@@ -160,6 +162,26 @@ class _LoggedIn extends StatelessWidget {
         const Icon(
           Icons.check_circle,
           color: AppTheme.successColor,
+        ),
+      ],
+    );
+  }
+}
+
+class _ReportPossibleThreatButton extends StatelessWidget {
+  const _ReportPossibleThreatButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 300,
+          child: OutlinedButton(
+            onPressed: () => launch('https://t.me/stopdrugsbot'),
+            child: Text(AppLocale.homeReportPossibleThreat),
+          ),
         ),
       ],
     );

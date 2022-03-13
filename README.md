@@ -16,7 +16,6 @@ Feel free to post a feature requests or report a bug [here](https://github.com/m
 
 ## TODO
 
-1. Add link to stoprussia telegram bot
-2. Rename project to youtube_reporter
-3. Move gathering of videos to admin app
-4. Migrate from Firebase Storage to Google Sheet API (due to this change last processed index will be stored that avoids re-reporting of already processed chunks of data in case of any interuption of file processing)
+1. Rename project to youtube_reporter
+2. Move gathering of videos to admin app
+3. Migrate from Firebase Storage to Google Sheet API (due to this change last processed index will be stored that avoids re-reporting of already processed chunks of data in case of any interuption of file processing)

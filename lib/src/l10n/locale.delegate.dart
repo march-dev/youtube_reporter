@@ -14,6 +14,7 @@ abstract class AppLocaleDelegate {
   String get homePrivacy;
   String get homeLoginToYouTube;
   String homeLoggedInYouTube(String email);
+  String get homeReportPossibleThreat;
   String get homeReportingInProgress;
 
   String get telegramEnterPhoneTitle;

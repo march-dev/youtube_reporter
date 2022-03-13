@@ -45,6 +45,8 @@ class AppLocale {
   static final homeLoginToYouTube = _currDelegate.homeLoginToYouTube;
   static String homeLoggedInYouTube(String email) =>
       _currDelegate.homeLoggedInYouTube(email);
+  static final homeReportPossibleThreat =
+      _currDelegate.homeReportPossibleThreat;
   static final homeReportingInProgress = _currDelegate.homeReportingInProgress;
 
   static final telegramEnterPhoneTitle = _currDelegate.telegramEnterPhoneTitle;

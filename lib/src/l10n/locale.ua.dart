@@ -31,6 +31,8 @@ class AppLocaleUa implements AppLocaleDelegate {
   String homeLoggedInYouTube(String email) =>
       'Вхід у YouTube виконано як $email';
   @override
+  final homeReportPossibleThreat = 'Надіслати потенційну загрозу на перевірку';
+  @override
   final homeReportingInProgress =
       'Триває надсилання скарги. Зачекайте будь-ласка...';
 

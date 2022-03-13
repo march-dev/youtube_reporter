@@ -25,6 +25,17 @@ class AppTheme {
     ),
   );
 
+  static final outlinedButtonThemeData = OutlinedButtonThemeData(
+    style: ButtonStyle(
+      enableFeedback: true,
+      padding: MaterialStateProperty.all(const EdgeInsets.all(12)),
+      fixedSize: MaterialStateProperty.all(const Size(300, 40)),
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
+    ),
+  );
+
   static get materialThemeData => ThemeData(
         brightness: brightness,
         primarySwatch: primaryColor,
@@ -33,5 +44,6 @@ class AppTheme {
         canvasColor: backgroundColor,
         cardColor: backgroundColor,
         elevatedButtonTheme: elevatedButtonThemeData,
+        outlinedButtonTheme: outlinedButtonThemeData,
       );
 }

@@ -30,6 +30,8 @@ class AppLocaleEn implements AppLocaleDelegate {
   @override
   String homeLoggedInYouTube(String email) => 'Logged in to YouTube as $email';
   @override
+  final homeReportPossibleThreat = 'Send potential threat to verification';
+  @override
   final homeReportingInProgress = 'Reporting in progress. Please wait...';
 
   @override
