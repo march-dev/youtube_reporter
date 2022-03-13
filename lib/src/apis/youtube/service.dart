@@ -3,8 +3,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/youtube/v3.dart';
 import 'package:social_reporter/core.dart';
 
-const _reportDelay = Duration(minutes: 3);
-const _retryDelay = Duration(minutes: 10);
+const _reportDelay = Duration(minutes: 5);
+const _retryDelay = Duration(minutes: 15);
 
 class YouTubeService {
   factory YouTubeService() => _instance;
