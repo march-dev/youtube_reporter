@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:social_reporter/core.dart';
+import 'package:youtube_reporter/core.dart';
 
 const _loopDelay = Duration(minutes: 1);
 

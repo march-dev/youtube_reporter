@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:social_reporter/core.dart';
+import 'package:youtube_reporter/core.dart';
 
 const _keyYouTubeLastProcessedFile = 'key_youtube_last_processed_file';
 const _keyYouTubeCurrentProcessingFile = 'key_youtube_current_processing_file';

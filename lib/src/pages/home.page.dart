@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:social_reporter/core.dart';
+import 'package:youtube_reporter/core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final _headerFooterStyle = TextStyle(

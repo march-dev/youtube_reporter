@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:social_reporter/core.dart';
+import 'package:youtube_reporter/core.dart';
 
 import 'pages/home.page.dart';
 

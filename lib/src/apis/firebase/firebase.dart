@@ -1,5 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:social_reporter/core.dart';
+import 'package:youtube_reporter/core.dart';
 
 class FirInitializer {
   const FirInitializer._();
