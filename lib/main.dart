@@ -11,15 +11,5 @@ Future<void> main() async {
   await FirInitializer.init();
   YouTubeService().init();
 
-  // TODO: uncomment when it works
-  // if (kIsWeb) {
-  //   await TdPlugin.initialize();
-  // } else {
-  //   await TdPlugin.initialize('libtdjson.1.8.1.dylib');
-  // }
-
-  // final client = TelegramClient();
-  // TelegramService().init(client);
-
   runApp(const App());
 }

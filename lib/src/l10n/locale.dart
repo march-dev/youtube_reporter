@@ -39,10 +39,9 @@ class AppLocale {
   static final generalError = _currDelegate.generalError;
 
   static final homeTitle = _currDelegate.homeTitle;
+  static final homeSubtitle = _currDelegate.homeSubtitle;
   static final homeAbout = _currDelegate.homeAbout;
   static final homePrivacy = _currDelegate.homePrivacy;
-  static final homeLoginToTelegram = _currDelegate.homeLoginToTelegram;
-  static final homeLoggedInTelegram = _currDelegate.homeLoggedInTelegram;
   static final homeLoginToYouTube = _currDelegate.homeLoginToYouTube;
   static String homeLoggedInYouTube(String email) =>
       _currDelegate.homeLoggedInYouTube(email);

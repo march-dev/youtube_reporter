@@ -4,7 +4,7 @@ class AppLocaleEn implements AppLocaleDelegate {
   const AppLocaleEn();
 
   @override
-  final appTitle = 'Social Reporter';
+  final appTitle = 'YouTube Reporter';
 
   @override
   final next = 'Next';
@@ -20,13 +20,11 @@ class AppLocaleEn implements AppLocaleDelegate {
   @override
   final homeTitle = 'IT Resistance of Ukraine';
   @override
+  final homeSubtitle = 'YouTube Reporter';
+  @override
   final homeAbout = 'About';
   @override
   final homePrivacy = 'Privacy Policy';
-  @override
-  final homeLoginToTelegram = 'Login to Telegram';
-  @override
-  final homeLoggedInTelegram = 'Logged in to Telegram';
   @override
   final homeLoginToYouTube = 'Login to YouTube';
   @override

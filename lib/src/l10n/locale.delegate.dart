@@ -9,10 +9,9 @@ abstract class AppLocaleDelegate {
   String get generalError;
 
   String get homeTitle;
+  String get homeSubtitle;
   String get homeAbout;
   String get homePrivacy;
-  String get homeLoginToTelegram;
-  String get homeLoggedInTelegram;
   String get homeLoginToYouTube;
   String homeLoggedInYouTube(String email);
   String get homeReportingInProgress;

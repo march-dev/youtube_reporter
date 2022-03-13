@@ -4,7 +4,7 @@ class AppLocaleUa implements AppLocaleDelegate {
   const AppLocaleUa();
 
   @override
-  final appTitle = 'Social Reporter';
+  final appTitle = 'YouTube Reporter';
 
   @override
   final next = 'Далі';
@@ -20,13 +20,11 @@ class AppLocaleUa implements AppLocaleDelegate {
   @override
   final homeTitle = 'IT Спротив України';
   @override
+  final homeSubtitle = 'YouTube Скарження';
+  @override
   final homeAbout = 'Про нас';
   @override
   final homePrivacy = 'Політика конфіденційності';
-  @override
-  final homeLoginToTelegram = 'Вхід у Telegram';
-  @override
-  final homeLoggedInTelegram = 'Вхід у Telegram виконано';
   @override
   final homeLoginToYouTube = 'Вхід у YouTube';
   @override

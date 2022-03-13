@@ -1,7 +1,5 @@
 export 'src/apis/firebase/firebase.dart';
 export 'src/apis/firebase/storage.dart';
-export 'src/apis/telegram/client.dart';
-export 'src/apis/telegram/service.dart';
 export 'src/apis/youtube/service.dart';
 export 'src/env/env.dart';
 export 'src/l10n/locale.dart';

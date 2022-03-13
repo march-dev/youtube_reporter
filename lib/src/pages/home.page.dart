@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:social_reporter/core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'telegram/auth.dialog.dart';
-
 final _headerFooterStyle = TextStyle(
   fontSize: 11,
   color: AppTheme.onBackgroundColor.withOpacity(0.5),
@@ -18,22 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _telegramLoggedIn = false;
   bool _youtubeLoggedIn = false;
-
-  Future<void> _onLoginTelegramPressed() async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: AppTheme.warningColor,
-        content: Text(AppLocale.inDevelopment),
-      ),
-    );
-    return;
-
-    _telegramLoggedIn =
-        await TelegramAuthDialog.open(context, TelegramService());
-    setState(() {});
-  }
 
   Future<void> _onLoginYouTubePressed() async {
     _youtubeLoggedIn = await YouTubeService().login();
@@ -66,14 +49,16 @@ class _HomePageState extends State<HomePage> {
               color: Colors.yellow,
             ),
           ),
-          const Spacer(flex: 5),
-          _AdaptiveButton(
-            loggedIn: _telegramLoggedIn,
-            onPressed: _onLoginTelegramPressed,
-            title: AppLocale.homeLoginToTelegram,
-            successTextBuilder: () => AppLocale.homeLoggedInTelegram,
+          const SizedBox(height: 8),
+          Text(
+            AppLocale.homeSubtitle,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.yellow,
+            ),
           ),
-          const SizedBox(height: 24),
+          const Spacer(flex: 5),
           _AdaptiveButton(
             loggedIn: _youtubeLoggedIn,
             onPressed: _onLoginYouTubePressed,

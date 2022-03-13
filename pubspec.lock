@@ -439,15 +439,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  tdlib:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: bf2247d1e2ea0c7f7c5e6f324bced6cefdca3a88
-      resolved-ref: bf2247d1e2ea0c7f7c5e6f324bced6cefdca3a88
-      url: "https://github.com/OlehMarchenko95/tdlib.git"
-    source: git
-    version: "1.6.0"
   term_glyph:
     dependency: transitive
     description:
