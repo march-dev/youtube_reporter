@@ -236,8 +236,8 @@ class YouTubeService {
         final newPtDayDelay = ptTimeToNextDay();
         final hours = newPtDayDelay.inHours;
         final minutes = newPtDayDelay.inMinutes - hours * 60;
-        final seconds = newPtDayDelay.inSeconds - minutes * 60;
-        log('Retrying in $hours hours $minutes minutes $seconds...');
+        final seconds = newPtDayDelay.inSeconds % 60;
+        log('Retrying in $hours hours $minutes minutes $seconds seconds...');
         await Future.delayed(newPtDayDelay);
         await reportVideo(id);
         return;
