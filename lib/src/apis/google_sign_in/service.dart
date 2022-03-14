@@ -26,7 +26,8 @@ class GoogleSignInService {
       scopes: [
         'email',
         YouTubeApi.youtubeReadonlyScope,
-        SheetsApi.spreadsheetsScope,
+        YouTubeApi.youtubepartnerScope,
+        SheetsApi.spreadsheetsReadonlyScope,
       ],
     );
   }
