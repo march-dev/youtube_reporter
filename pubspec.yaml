@@ -1,6 +1,6 @@
 name: youtube_reporter
 description: YouTube reporter is an app which main purpose is to make it easier to report abuse of videos that provokes violece/war/russian propaganda/terrorism.
-version: 1.4.0+22
+version: 1.4.0+23
 
 publish_to: 'none'
 
