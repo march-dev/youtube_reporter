@@ -6,15 +6,32 @@ on:
       - main
       - master
       - develop
+    tags:
+      - '*'
 
 jobs:
   build:
-    
+    if: github.event_name == 'push' && !contains(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v1
-    - uses: subosito/flutter-action@v1
-      with:
-        channel: 'stable'
-    - run: flutter pub get
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - run: flutter pub get
+
+  build_and_deploy:
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - run: flutter build web --dart-define google_api_key=${{ secrets.GOOGLE_API_KEY }} --dart-define fir_app_id=${{ secrets.FIR_APP_ID }} --dart-define fir_api_key=${{ secrets.FIR_API_KEY }} --dart-define fir_messaging_sender_id=${{ secrets.FIR_MESSAGING_SENDER_ID }} --dart-define sheet_id=${{ secrets.SHEET_ID }}
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_YT_REPORTER_ADMIN_PANEL }}'
+          projectId: socialreporter
+          channelId: live

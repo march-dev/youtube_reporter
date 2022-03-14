@@ -9,11 +9,8 @@ class FirInitializer {
       options: const FirebaseOptions(
         appId: AppEnv.firAppId,
         apiKey: AppEnv.firApiKey,
-        measurementId: AppEnv.firMeasurementId,
         messagingSenderId: AppEnv.firMessagingSenderId,
         projectId: 'socialreporter',
-        storageBucket: 'socialreporter.appspot.com',
-        authDomain: 'socialreporter.firebaseapp.com',
       ),
     );
   }

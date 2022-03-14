@@ -9,7 +9,7 @@ Future<void> main() async {
   await AppEnv.init();
   await SharedPref().init();
   await FirInitializer.init();
-  YouTubeService().init();
+  await GoogleSignInService().init();
 
   runApp(const App());
 }

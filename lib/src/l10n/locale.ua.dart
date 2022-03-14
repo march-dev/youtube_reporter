@@ -18,10 +18,9 @@ class AppLocaleUa implements AppLocaleDelegate {
   @override
   final homePrivacy = 'Політика конфіденційності';
   @override
-  final homeLoginToYouTube = 'Вхід у YouTube';
+  final homeLoginToGoogle = 'Вхід за допомогою Google';
   @override
-  String homeLoggedInYouTube(String email) =>
-      'Вхід у YouTube виконано як $email';
+  String homeLoggedInGoogle(String email) => 'Вхід виконано як $email';
   @override
   final homeReportPossibleThreat = 'Надіслати потенційну загрозу на перевірку';
   @override

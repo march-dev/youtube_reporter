@@ -10,40 +10,31 @@ final taskLoopTotal = ValueNotifier<int>(0);
 Future<void> youTubeTaskLoop() async {
   await Future.delayed(_loopDelay);
 
-  if (!YouTubeService().isLoggedIn) {
+  if (!GoogleSignInService().isLoggedIn) {
     youTubeTaskLoop();
     return;
   }
 
-  final rawLinks = await FirStorage().getYouTubeLinks();
+  final lastIndex = YouTubeService().getLastProcessedIndex();
+  final rawIds = await SheetsService().getYouTubeVideoIds();
+  final ids = lastIndex == null ? rawIds : rawIds.skip(lastIndex + 1).toList();
 
-  if (rawLinks.isEmpty) {
+  if (ids.isEmpty) {
     youTubeTaskLoop();
     return;
   }
 
   taskLoopProcessing.value = true;
+  taskLoopTotal.value = ids.length;
+  taskLoopCurrent.value = lastIndex ?? 0;
 
-  final links = rawLinks.map((link) => YouTubeLink.fromString(link)).toList();
-  final videoLinks = links.where((link) => link.videoId != null).toList();
-  final channelLinks = links.where((link) => link.videoId == null).toList();
-
-  taskLoopTotal.value = videoLinks.length + channelLinks.length;
-
-  for (var link in videoLinks) {
-    await YouTubeService().reportVideo(link.videoId!).catchError(logError);
-  }
-  for (var link in channelLinks) {
-    await YouTubeService()
-        .reportChannelVideos(
-          id: link.channelId,
-          username: link.channelUsername,
-          customUrl: link.channelCustomUrl,
-        )
-        .catchError(logError);
+  for (var i = 0; i < ids.length; i++) {
+    final id = ids[i];
+    await YouTubeService().reportVideo(id);
+    YouTubeService().saveLastProcessedIndex(i);
+    taskLoopCurrent.value = taskLoopCurrent.value + 1;
   }
 
-  FirStorage().markCurrentYouTubeFileAsProcessed();
   taskLoopProcessing.value = false;
   taskLoopCurrent.value = 0;
   taskLoopTotal.value = 0;

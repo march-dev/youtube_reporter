@@ -16,7 +16,6 @@ class SharedPref {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  String? getString(String key) => _prefs.getString(key);
-  Future<bool> setString(String key, String value) =>
-      _prefs.setString(key, value);
+  int? getInt(String key) => _prefs.getInt(key);
+  Future<bool> setInt(String key, int value) => _prefs.setInt(key, value);
 }

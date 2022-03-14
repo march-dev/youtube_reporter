@@ -15,9 +15,6 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
 
-  # UI
-  cupertino_icons: ^1.0.2
-
   # System
   url_launcher: ^6.0.20
   package_info_plus: ^1.4.0
@@ -31,7 +28,7 @@ dependencies:
 
   # APIs
   firebase_core: ^1.13.1
-  firebase_storage: ^10.2.9
+  firebase_analytics: ^9.1.2
   googleapis: ^8.1.0
 
 dev_dependencies:

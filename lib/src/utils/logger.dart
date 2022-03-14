@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 String get _logPrefix =>
-    '[socialreporter][${DateTime.now().toIso8601String()}]';
+    '[youtubereporter][${DateTime.now().toIso8601String()}]';
 
 void log(String message) {
   print('$_logPrefix $message');

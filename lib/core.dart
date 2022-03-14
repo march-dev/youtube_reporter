@@ -1,12 +1,12 @@
 export 'src/apis/firebase/firebase.dart';
-export 'src/apis/firebase/storage.dart';
+export 'src/apis/google_sign_in/service.dart';
+export 'src/apis/sheets/service.dart';
 export 'src/apis/youtube/service.dart';
 export 'src/env/env.dart';
 export 'src/l10n/locale.dart';
 export 'src/theme/theme.dart';
 export 'src/utils/datetime.dart';
 export 'src/utils/exceptions.dart';
-export 'src/utils/link.parser.dart';
 export 'src/utils/logger.dart';
 export 'src/utils/report_comments.dart';
 export 'src/utils/shared_pref.dart';

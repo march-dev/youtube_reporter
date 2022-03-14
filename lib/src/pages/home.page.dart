@@ -16,10 +16,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _youtubeLoggedIn = false;
+  bool _googleLoggedIn = false;
 
   Future<void> _onLoginYouTubePressed() async {
-    _youtubeLoggedIn = await YouTubeService().login();
+    _googleLoggedIn = await GoogleSignInService().login();
+    await YouTubeService().init(GoogleSignInService());
+    await SheetsService().init(GoogleSignInService());
     setState(() {});
   }
 
@@ -60,11 +62,11 @@ class _HomePageState extends State<HomePage> {
           ),
           const Spacer(flex: 5),
           _AdaptiveButton(
-            loggedIn: _youtubeLoggedIn,
+            loggedIn: _googleLoggedIn,
             onPressed: _onLoginYouTubePressed,
-            title: AppLocale.homeLoginToYouTube,
+            title: AppLocale.homeLoginToGoogle,
             successTextBuilder: () =>
-                AppLocale.homeLoggedInYouTube(YouTubeService().loggedInAs),
+                AppLocale.homeLoggedInGoogle(GoogleSignInService().loggedInAs),
           ),
           const SizedBox(height: 24),
           const _ReportPossibleThreatButton(),

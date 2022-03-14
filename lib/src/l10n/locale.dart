@@ -37,9 +37,9 @@ class AppLocale {
   static final homeSubtitle = _currDelegate.homeSubtitle;
   static final homeAbout = _currDelegate.homeAbout;
   static final homePrivacy = _currDelegate.homePrivacy;
-  static final homeLoginToYouTube = _currDelegate.homeLoginToYouTube;
-  static String homeLoggedInYouTube(String email) =>
-      _currDelegate.homeLoggedInYouTube(email);
+  static final homeLoginToGoogle = _currDelegate.homeLoginToGoogle;
+  static String homeLoggedInGoogle(String email) =>
+      _currDelegate.homeLoggedInGoogle(email);
   static final homeReportPossibleThreat =
       _currDelegate.homeReportPossibleThreat;
   static final homeReportingInProgress = _currDelegate.homeReportingInProgress;

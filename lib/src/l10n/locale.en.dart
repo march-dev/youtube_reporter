@@ -18,9 +18,9 @@ class AppLocaleEn implements AppLocaleDelegate {
   @override
   final homePrivacy = 'Privacy Policy';
   @override
-  final homeLoginToYouTube = 'Login to YouTube';
+  final homeLoginToGoogle = 'Login via Google';
   @override
-  String homeLoggedInYouTube(String email) => 'Logged in to YouTube as $email';
+  String homeLoggedInGoogle(String email) => 'Logged in as $email';
   @override
   final homeReportPossibleThreat = 'Send potential threat to verification';
   @override
