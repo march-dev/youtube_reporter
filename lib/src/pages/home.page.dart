@@ -138,7 +138,10 @@ class _Button extends StatelessWidget {
           width: 300,
           child: ElevatedButton(
             onPressed: onPressed,
-            child: Text(title),
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       ],
@@ -182,7 +185,10 @@ class _ReportPossibleThreatButton extends StatelessWidget {
           width: 300,
           child: OutlinedButton(
             onPressed: () => launch('https://t.me/stopdrugsbot'),
-            child: Text(AppLocale.homeReportPossibleThreat),
+            child: Text(
+              AppLocale.homeReportPossibleThreat,
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       ],
