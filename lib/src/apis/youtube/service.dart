@@ -3,6 +3,7 @@ import 'package:youtube_reporter/core.dart';
 
 const _reportDelay = Duration(minutes: 5);
 const _retryDelay = Duration(minutes: 15);
+const _reauthDelay = Duration(minutes: 60);
 
 const _keyYouTubeLastProcessedIndex = 'key_youtube_last_processed_index';
 
@@ -13,6 +14,8 @@ class YouTubeService {
 
   late GoogleSignInService _authService;
   late YouTubeApi _youtubeApi;
+
+  int _reauthCounter = 0;
 
   Future<bool> init(GoogleSignInService service) async {
     _authService = service;
@@ -68,6 +71,8 @@ class YouTubeService {
       logError(e, trace);
     } catch (e, trace) {
       if (isAccessDeniedException(e)) {
+        await Future.delayed(_reauthDelay * _reauthCounter);
+        _reauthCounter++;
         log('Login session ended. Creating new one...');
         await _loginSilently();
         log('New login session created. Retrying video reporting...');
@@ -78,6 +83,7 @@ class YouTubeService {
       logError(e, trace);
     }
 
+    _reauthCounter = 0;
     await Future.delayed(_reportDelay);
   }
 
