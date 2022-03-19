@@ -27,7 +27,7 @@ Future<void> youTubeTaskLoop() async {
 
   taskLoopProcessing.value = true;
   taskLoopTotal.value = ids.length;
-  taskLoopCurrent.value = lastIndex;
+  taskLoopCurrent.value = 0;
 
   for (var i = 0; i < ids.length; i++) {
     final id = ids[i];
