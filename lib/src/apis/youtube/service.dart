@@ -5,7 +5,7 @@ const _reportDelay = Duration(minutes: 5);
 const _retryDelay = Duration(minutes: 15);
 const _reauthDelay = Duration(minutes: 60);
 
-const _keyYouTubeLastProcessedIndex = 'key_youtube_last_processed_index';
+const _keyYouTubeLastProcessedId = 'key_youtube_last_processed_id';
 
 class YouTubeService {
   factory YouTubeService() => _instance;
@@ -87,8 +87,8 @@ class YouTubeService {
     await Future.delayed(_reportDelay);
   }
 
-  int? getLastProcessedIndex() =>
-      SharedPref().getInt(_keyYouTubeLastProcessedIndex);
-  void saveLastProcessedIndex(int index) =>
-      SharedPref().setInt(_keyYouTubeLastProcessedIndex, index);
+  String? getLastProcessedId() =>
+      SharedPref().getString(_keyYouTubeLastProcessedId);
+  void saveLastProcessedId(String id) =>
+      SharedPref().setString(_keyYouTubeLastProcessedId, id);
 }

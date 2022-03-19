@@ -15,9 +15,10 @@ Future<void> youTubeTaskLoop() async {
     return;
   }
 
-  final lastIndex = YouTubeService().getLastProcessedIndex();
+  final lastId = YouTubeService().getLastProcessedId();
   final rawIds = await SheetsService().getYouTubeVideoIds();
-  final ids = lastIndex == null ? rawIds : rawIds.skip(lastIndex + 1).toList();
+  final lastIndex = lastId != null ? rawIds.indexOf(lastId) : 0;
+  final ids = rawIds.skip(lastIndex + 1).toList();
 
   if (ids.isEmpty) {
     youTubeTaskLoop();
@@ -26,12 +27,12 @@ Future<void> youTubeTaskLoop() async {
 
   taskLoopProcessing.value = true;
   taskLoopTotal.value = ids.length;
-  taskLoopCurrent.value = lastIndex ?? 0;
+  taskLoopCurrent.value = lastIndex;
 
   for (var i = 0; i < ids.length; i++) {
     final id = ids[i];
     await YouTubeService().reportVideo(id);
-    YouTubeService().saveLastProcessedIndex(i);
+    YouTubeService().saveLastProcessedId(id);
     taskLoopCurrent.value = taskLoopCurrent.value + 1;
   }
 

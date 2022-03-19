@@ -25,7 +25,6 @@ class GoogleSignInService {
       clientId: AppEnv.googleApiKey,
       scopes: [
         'email',
-        YouTubeApi.youtubeReadonlyScope,
         YouTubeApi.youtubeForceSslScope,
         SheetsApi.spreadsheetsReadonlyScope,
       ],
